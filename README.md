@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Bếp Cô Chủ Nhỏ
 
-## Getting Started
+Web app B2B cho doanh nghiệp đặt suất ăn công nghiệp, quản lý menu tuần, duyệt khách hàng, theo dõi đơn hàng và chốt công nợ.
 
-First, run the development server:
+## Tính năng chính
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Trang chủ giới thiệu dịch vụ, menu, quy trình đặt cơm và thông tin liên hệ.
+- Đăng ký doanh nghiệp, đăng nhập email/mật khẩu, phân quyền Admin/Client.
+- Client xem menu tuần, đặt món theo ngày, theo dõi đơn hàng và công nợ.
+- Admin duyệt khách hàng, tạo món, nhập/sửa/xuất menu tuần bằng CSV.
+- Admin tổng hợp số lượng món cần nấu, quản lý trạng thái đơn hàng.
+- Admin chốt công nợ theo tháng và xác nhận invoice đã thanh toán.
+
+## Tài khoản admin mẫu
+
+```txt
+Email: admin@cochunho.vn
+Mật khẩu: admin123
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Chạy seed để tạo tài khoản này và dữ liệu menu mẫu. Khi deploy production, hãy đổi mật khẩu admin.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Cài đặt local
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm install
+copy .env.example .env
+docker compose up -d
+npm run db:push
+npm run db:seed
+npm run dev
+```
 
-## Learn More
+Mở `http://localhost:3000`.
 
-To learn more about Next.js, take a look at the following resources:
+## Biến môi trường
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Xem [.env.example](./.env.example).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Local Docker MySQL mặc định:
 
-## Deploy on Vercel
+```env
+DATABASE_URL="mysql://cochunho:cochunho_pass@localhost:3307/cochunho_db"
+AUTH_SECRET="replace-with-a-long-random-secret"
+AUTH_URL="http://localhost:3000"
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="replace-with-a-long-random-secret"
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Lệnh hữu ích
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run dev          # chạy môi trường phát triển
+npm run build        # prisma generate + build production
+npm run lint         # kiểm tra lint
+npm run clean        # xóa .next và cache
+npm run db:generate  # generate Prisma Client
+npm run db:push      # đẩy Prisma schema lên MySQL
+npm run db:seed      # tạo dữ liệu mẫu
+npm run studio       # mở Prisma Studio
+```
+
+## Deploy production
+
+Phương án khuyến nghị: Vercel + MySQL managed/cloud. Docker chỉ dùng để chạy MySQL local khi phát triển.
+
+Xem checklist chi tiết trong [DEPLOYMENT.md](./DEPLOYMENT.md).

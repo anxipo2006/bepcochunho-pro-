@@ -4,23 +4,41 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
+    "vercel-build": "prisma generate && next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "clean": "node -e \"const fs=require('fs'); for (const p of ['.next','node_modules/.cache']) fs.rmSync(p,{recursive:true,force:true});\"",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:seed": "node prisma/seed.mjs",
+    "studio": "prisma studio"
   },
   "dependencies": {
-    "next": "16.2.6",
-    "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "@prisma/client": "^6.19.3",
+    "bcryptjs": "^3.0.3",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.40.0",
+    "lucide-react": "^1.17.0",
+    "next": "^14.2.35",
+    "next-auth": "^5.0.0-beta.31",
+    "prisma": "^6.19.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^3.6.0",
+    "zod": "^4.4.3",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.2.6",
-    "tailwindcss": "^4",
+    "@types/react": "^18.3.29",
+    "@types/react-dom": "^18.3.7",
+    "autoprefixer": "^10.5.0",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.35",
+    "postcss": "^8.5.15",
+    "tailwindcss": "^3.4.17",
     "typescript": "^5"
   }
 }
