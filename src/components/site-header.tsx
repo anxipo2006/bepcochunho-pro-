@@ -20,7 +20,7 @@ export async function SiteHeader() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <a href="/" className="flex items-center gap-2 font-bold text-slate-950">
           <Image
-            src="/logo.jpg"
+            src="/optimized/logo.webp"
             alt="Bếp Cô Chủ Nhỏ"
             width={40}
             height={40}

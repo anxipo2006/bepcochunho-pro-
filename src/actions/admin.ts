@@ -1,10 +1,11 @@
 "use server";
 
 import { InvoiceStatus, MenuCategory, OrderStatus, Role } from "@prisma/client";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { auth } from "@/auth";
+import { WEEKLY_MENU_CACHE_TAG } from "@/lib/home-data";
 import { billingMonthFromDate } from "@/lib/utils";
 import { prisma } from "@/lib/prisma";
 import { assertSameOrigin, sanitizeText } from "@/lib/security";
@@ -224,7 +225,9 @@ export async function createDailyMenuAction(formData: FormData) {
   });
 
   revalidatePath("/admin/menu");
+  revalidatePath("/");
   revalidatePath("/dashboard");
+  revalidateTag(WEEKLY_MENU_CACHE_TAG);
 }
 
 export async function upsertWeeklyMenuAction(formData: FormData) {
@@ -279,7 +282,9 @@ export async function upsertWeeklyMenuAction(formData: FormData) {
   await syncMenuItemsFromWeeklyCells(cells);
 
   revalidatePath("/admin/menu");
+  revalidatePath("/");
   revalidatePath("/dashboard");
+  revalidateTag(WEEKLY_MENU_CACHE_TAG);
 }
 
 export async function importWeeklyMenuAction(formData: FormData) {
@@ -322,7 +327,9 @@ export async function importWeeklyMenuAction(formData: FormData) {
   await syncMenuItemsFromWeeklyCells(cells);
 
   revalidatePath("/admin/menu");
+  revalidatePath("/");
   revalidatePath("/dashboard");
+  revalidateTag(WEEKLY_MENU_CACHE_TAG);
 }
 
 export async function deleteWeeklyMenuAction(formData: FormData) {
@@ -332,5 +339,7 @@ export async function deleteWeeklyMenuAction(formData: FormData) {
   await prisma.weeklyMenu.delete({ where: { id } });
 
   revalidatePath("/admin/menu");
+  revalidatePath("/");
   revalidatePath("/dashboard");
+  revalidateTag(WEEKLY_MENU_CACHE_TAG);
 }

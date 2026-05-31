@@ -2,14 +2,10 @@ import { FloatingContact } from "@/components/floating-contact";
 import { MotionLanding } from "@/components/motion-landing";
 import { SiteHeader } from "@/components/site-header";
 import { WeeklyMenuView } from "@/components/weekly-menu-view";
-import { prisma } from "@/lib/prisma";
+import { getActiveWeeklyMenu } from "@/lib/home-data";
 
 export default async function Home({ searchParams }: { searchParams: { consulted?: string } }) {
-  const weeklyMenu = await prisma.weeklyMenu.findFirst({
-    where: { isActive: true },
-    orderBy: { startDate: "desc" },
-    include: { cells: { orderBy: [{ group: "asc" }, { slot: "asc" }, { dayIndex: "asc" }] } },
-  });
+  const weeklyMenu = await getActiveWeeklyMenu();
 
   return (
     <>
