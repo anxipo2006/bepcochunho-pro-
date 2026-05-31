@@ -8,14 +8,18 @@ import { ClientCancelButton } from "@/components/client-cancel-button";
 const statusTone = {
   PENDING: "amber",
   CONFIRMED: "teal",
-  DELIVERED: "green",
+  DELIVERED: "slate",
+  PAID: "green",
+  DEBT: "coral",
   CANCELLED: "red",
 } as const;
 
 const statusLabel = {
   PENDING: "Chờ xác nhận",
   CONFIRMED: "Đã xác nhận",
-  DELIVERED: "Đã giao",
+  DELIVERED: "Đã giao (Cũ)",
+  PAID: "Đã thanh toán",
+  DEBT: "Ghi công nợ",
   CANCELLED: "Đã hủy",
 };
 

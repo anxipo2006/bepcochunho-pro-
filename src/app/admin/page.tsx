@@ -12,7 +12,9 @@ const statusLabel = {
   ALL: "Tất cả trạng thái",
   PENDING: "Chờ xác nhận",
   CONFIRMED: "Đã xác nhận",
-  DELIVERED: "Đã giao",
+  DELIVERED: "Đã giao (Cũ)",
+  PAID: "Đã thanh toán",
+  DEBT: "Ghi công nợ",
   CANCELLED: "Đã hủy",
 } as const;
 

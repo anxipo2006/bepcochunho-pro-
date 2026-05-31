@@ -7,7 +7,9 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 const statusLabel = {
   PENDING: "Chờ xác nhận",
   CONFIRMED: "Đã xác nhận",
-  DELIVERED: "Đã giao",
+  DELIVERED: "Đã giao (Cũ)",
+  PAID: "Đã thanh toán",
+  DEBT: "Ghi công nợ",
   CANCELLED: "Đã hủy",
 } as const;
 

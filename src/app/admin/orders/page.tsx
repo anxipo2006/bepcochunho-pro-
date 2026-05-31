@@ -9,7 +9,9 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 const statusLabel = {
   PENDING: "Chờ xác nhận",
   CONFIRMED: "Đã xác nhận",
-  DELIVERED: "Đã giao",
+  DELIVERED: "Đã giao (Cũ)",
+  PAID: "Đã thanh toán",
+  DEBT: "Ghi công nợ",
   CANCELLED: "Đã hủy",
 };
 
@@ -56,7 +58,9 @@ export default async function AdminOrdersPage() {
                 <select className={inputClass} name="status" defaultValue={order.status}>
                   <option value="PENDING">Chờ xác nhận</option>
                   <option value="CONFIRMED">Đã xác nhận</option>
-                  <option value="DELIVERED">Đã giao</option>
+                  <option value="PAID">Đã thanh toán</option>
+                  <option value="DEBT">Ghi công nợ</option>
+                  {order.status === "DELIVERED" ? <option value="DELIVERED">Đã giao (Cũ)</option> : null}
                   <option value="CANCELLED">Đã hủy</option>
                 </select>
                 <SubmitButton pendingLabel="Đang lưu...">Lưu</SubmitButton>

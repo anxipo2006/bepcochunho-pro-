@@ -24,6 +24,8 @@ enum OrderStatus {
   CONFIRMED
   DELIVERED
   CANCELLED
+  PAID
+  DEBT
 }
 
 enum InvoiceStatus {

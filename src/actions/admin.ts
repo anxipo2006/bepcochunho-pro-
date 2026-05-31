@@ -105,15 +105,15 @@ export async function updateOrderStatusAction(formData: FormData) {
       data: { status: newStatus },
     });
 
-    // Nếu chuyển sang DELIVERED -> Cộng công nợ
-    if (newStatus === OrderStatus.DELIVERED) {
+    // Nếu chuyển sang DEBT -> Cộng công nợ
+    if (newStatus === OrderStatus.DEBT) {
       await tx.user.update({
         where: { id: order.userId },
         data: { debtBalance: { increment: order.totalAmount } },
       });
     }
-    // Nếu chuyển từ DELIVERED sang trạng thái khác (Undo) -> Trừ công nợ
-    else if (order.status === OrderStatus.DELIVERED) {
+    // Nếu chuyển từ DEBT sang trạng thái khác (Undo) -> Trừ công nợ
+    else if (order.status === OrderStatus.DEBT) {
       await tx.user.update({
         where: { id: order.userId },
         data: { debtBalance: { decrement: order.totalAmount } },
@@ -140,7 +140,7 @@ export async function closeInvoicesAction(formData: FormData) {
         where: {
           invoiceId: null,
           deliveryDate: { gte: from, lt: to },
-          status: { in: [OrderStatus.CONFIRMED, OrderStatus.DELIVERED] },
+          status: { in: [OrderStatus.CONFIRMED, OrderStatus.DEBT] },
         },
       },
     },
