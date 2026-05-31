@@ -6,10 +6,7 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 import { ClientCancelButton } from "@/components/client-cancel-button";
 
 function isPastCutoffTime(deliveryDate: Date) {
-  const cutoffTime = new Date(deliveryDate);
-  cutoffTime.setUTCDate(cutoffTime.getUTCDate() - 1);
-  cutoffTime.setUTCHours(8, 0, 0, 0);
-  return new Date() > cutoffTime;
+  return false;
 }
 
 const statusTone = {
