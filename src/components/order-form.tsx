@@ -38,78 +38,91 @@ export function OrderForm({
   return (
     <form action={createOrderAction} className="grid gap-4">
       <input type="hidden" name="deliveryDate" value={deliveryDate} />
-      {items.map((item) => {
-        const qty = quantities[item.id] ?? 0;
-        const itemTotal = qty * Number(item.price);
-        return (
-          <div
-            key={item.id}
-            className={`group rounded-2xl border bg-white p-4 transition-all duration-200 ${
-              qty > 0
-                ? "border-coral/30 bg-coral-soft/30 shadow-sm"
-                : "border-slate-200 hover:border-slate-300 hover:shadow-sm"
-            }`}
-          >
-            {/* Hidden input for form submission */}
-            <input type="hidden" name={`qty:${item.id}`} value={qty} />
+      {(() => {
+        const categories = [
+          { key: "MAN", label: "Món mặn", items: items.filter((item) => item.category === "MAN") },
+          { key: "CHAY", label: "Món chay", items: items.filter((item) => item.category === "CHAY") },
+          { key: "NUOC", label: "Món nước", items: items.filter((item) => item.category === "NUOC") },
+          { key: "THEM", label: "Món thêm", items: items.filter((item) => item.category === "THEM") },
+        ].filter((group) => group.items.length > 0);
 
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-              {/* Item info */}
-              <div className="min-w-0 flex-1">
-                <div className="font-bold text-slate-950">{item.name}</div>
-                <div className="mt-1 flex items-center gap-2">
-                  <span className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-500">
-                    {categoryLabel[item.category] ?? item.category}
-                  </span>
-                  <span className="text-sm font-semibold text-coral-dark">
-                    {formatCurrency(item.price)}/phần
-                  </span>
-                </div>
-              </div>
+        return categories.map((category) => (
+          <div key={category.key} className="mb-4 last:mb-0">
+            <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-slate-500">{category.label}</h3>
+            <div className="grid gap-4">
+              {category.items.map((item) => {
+                const qty = quantities[item.id] ?? 0;
+                const itemTotal = qty * Number(item.price);
+                return (
+                  <div
+                    key={item.id}
+                    className={`group rounded-2xl border bg-white p-4 transition-all duration-200 ${
+                      qty > 0
+                        ? "border-coral/30 bg-coral-soft/30 shadow-sm"
+                        : "border-slate-200 hover:border-slate-300 hover:shadow-sm"
+                    }`}
+                  >
+                    {/* Hidden input for form submission */}
+                    <input type="hidden" name={`qty:${item.id}`} value={qty} />
 
-              {/* Stepper */}
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setQuantity(item.id, Math.max(0, qty - 1))}
-                  className="grid h-9 w-9 place-items-center rounded-xl border border-slate-200 bg-white text-slate-500 transition-all duration-150 hover:border-coral/40 hover:bg-coral-soft hover:text-coral-dark active:scale-95 disabled:opacity-40"
-                  disabled={qty <= 0}
-                >
-                  <Minus size={16} />
-                </button>
-                <span className={`w-8 text-center text-lg font-extrabold ${qty > 0 ? "text-coral-dark" : "text-slate-300"}`}>
-                  {qty}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setQuantity(item.id, qty + 1)}
-                  className="grid h-9 w-9 place-items-center rounded-xl border border-slate-200 bg-white text-slate-500 transition-all duration-150 hover:border-coral/40 hover:bg-coral-soft hover:text-coral-dark active:scale-95"
-                >
-                  <Plus size={16} />
-                </button>
-                {qty > 0 && (
-                  <span className="ml-1 min-w-[64px] text-right text-sm font-bold text-teal-700">
-                    {formatCurrency(itemTotal)}
-                  </span>
-                )}
-              </div>
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                      {/* Item info */}
+                      <div className="min-w-0 flex-1">
+                        <div className="font-bold text-slate-950">{item.name}</div>
+                        <div className="mt-1 flex items-center gap-2">
+                          <span className="text-sm font-semibold text-coral-dark">
+                            {formatCurrency(item.price)}/phần
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Stepper */}
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setQuantity(item.id, Math.max(0, qty - 1))}
+                          className="grid h-9 w-9 place-items-center rounded-xl border border-slate-200 bg-white text-slate-500 transition-all duration-150 hover:border-coral/40 hover:bg-coral-soft hover:text-coral-dark active:scale-95 disabled:opacity-40"
+                          disabled={qty <= 0}
+                        >
+                          <Minus size={16} />
+                        </button>
+                        <span className={`w-8 text-center text-lg font-extrabold ${qty > 0 ? "text-coral-dark" : "text-slate-300"}`}>
+                          {qty}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setQuantity(item.id, qty + 1)}
+                          className="grid h-9 w-9 place-items-center rounded-xl border border-slate-200 bg-white text-slate-500 transition-all duration-150 hover:border-coral/40 hover:bg-coral-soft hover:text-coral-dark active:scale-95"
+                        >
+                          <Plus size={16} />
+                        </button>
+                        {qty > 0 && (
+                          <span className="ml-1 min-w-[64px] text-right text-sm font-bold text-teal-700">
+                            {formatCurrency(itemTotal)}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Note field - only show when qty > 0 */}
+                    {qty > 0 && (
+                      <div className="mt-3 border-t border-coral/10 pt-3">
+                        <input
+                          className={`${inputClass} text-xs`}
+                          name={`note:${item.id}`}
+                          placeholder="Ghi chú: ít cơm, không hành..."
+                          value={notes[item.id] ?? ""}
+                          onChange={(event) => setNote(item.id, event.target.value)}
+                        />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
-
-            {/* Note field - only show when qty > 0 */}
-            {qty > 0 && (
-              <div className="mt-3 border-t border-coral/10 pt-3">
-                <input
-                  className={`${inputClass} text-xs`}
-                  name={`note:${item.id}`}
-                  placeholder="Ghi chú: ít cơm, không hành..."
-                  value={notes[item.id] ?? ""}
-                  onChange={(event) => setNote(item.id, event.target.value)}
-                />
-              </div>
-            )}
           </div>
-        );
-      })}
+        ));
+      })()}
 
       {/* Order note */}
       <label className="grid gap-2 text-sm font-semibold text-slate-700">

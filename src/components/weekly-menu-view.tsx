@@ -147,7 +147,7 @@ export function WeeklyMenuView({
                         <div className="grid gap-0.5">
                           {dishes.map((dish) => {
                             const availableItem = availableItems.find(
-                              (item) => item.name === dish.name && (item.category === group.key || (item.category === "THEM" && group.key !== "MON_CHINH" && group.key !== "MON_CHAY_CHINH" && group.key !== "MON_NUOC"))
+                              (item) => item.name === dish.name
                             );
                             
                             return (
