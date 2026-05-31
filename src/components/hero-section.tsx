@@ -119,7 +119,7 @@ export function HeroSection() {
               className="relative mx-auto aspect-[4/3] max-w-xl overflow-hidden rounded-[2rem] border border-white/20 bg-white/10 shadow-[0_35px_90px_rgba(0,0,0,.38)] backdrop-blur-xl"
             >
               <Image
-                src="/optimized/logo.webp"
+                src="/optimized/3.webp"
                 alt="Khay cơm bento Bếp Cô Chủ Nhỏ"
                 fill
                 priority
