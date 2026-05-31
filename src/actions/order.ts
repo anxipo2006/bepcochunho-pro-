@@ -19,11 +19,6 @@ const orderItemSchema = z.object({
   note: z.string().max(180).optional().transform((value) => value ? sanitizeText(value, 180) : ""),
 });
 
-// Bỏ cơ chế giờ chốt đơn theo yêu cầu
-function isPastCutoffTime(deliveryDate: Date) {
-  return false;
-}
-
 export async function createOrderAction(formData: FormData) {
   assertSameOrigin();
   const session = await auth();
@@ -50,11 +45,7 @@ export async function createOrderAction(formData: FormData) {
     redirect("/dashboard?error=invalid-order");
   }
 
-  const deliveryDate = new Date(parsedOrder.data.deliveryDate);
-  // Bỏ chặn đặt hàng sát giờ
-  // if (isPastCutoffTime(deliveryDate)) {
-  //   redirect("/dashboard?error=past-cutoff");
-  // }
+
 
   const rawItems = Array.from(formData.entries())
     .filter(([key]) => key.startsWith("qty:"))
@@ -148,10 +139,7 @@ export async function cancelOrderAction(formData: FormData) {
     redirect("/dashboard/orders?error=cannot-cancel");
   }
 
-  // Bỏ chặn hủy đơn sát giờ
-  // if (isPastCutoffTime(order.deliveryDate)) {
-  //   redirect("/dashboard/orders?error=past-cutoff");
-  // }
+
 
   await prisma.order.update({
     where: { id: orderId },

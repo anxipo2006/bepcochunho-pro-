@@ -5,10 +5,6 @@ import { prisma } from "@/lib/prisma";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { ClientCancelButton } from "@/components/client-cancel-button";
 
-function isPastCutoffTime(deliveryDate: Date) {
-  return false;
-}
-
 const statusTone = {
   PENDING: "amber",
   CONFIRMED: "teal",
@@ -42,7 +38,7 @@ export default async function ClientOrdersPage() {
                 <div className="font-semibold text-slate-950">Giao {formatDate(order.deliveryDate)}</div>
                 <div className="mt-1 text-sm text-slate-500">{formatCurrency(order.totalAmount.toString())}</div>
                 {order.note ? <div className="mt-1 text-sm text-slate-600">Ghi chú: {order.note}</div> : null}
-                {order.status === "PENDING" && !isPastCutoffTime(order.deliveryDate) ? (
+                {order.status === "PENDING" ? (
                   <div className="mt-2">
                     <ClientCancelButton orderId={order.id} />
                   </div>
