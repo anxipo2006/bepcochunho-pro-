@@ -5,8 +5,8 @@ import {
   importWeeklyMenuAction,
   upsertWeeklyMenuAction,
 } from "@/actions/admin";
-import { Button } from "@/components/ui/button";
 import { inputClass } from "@/components/ui/form";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { cn, formatDate } from "@/lib/utils";
 import {
   getWeekDates,
@@ -58,7 +58,7 @@ export function WeeklyMenuEditor({ weeklyMenu }: { weeklyMenu?: WeeklyMenu | nul
             Thứ Hai đầu tuần
             <input className={inputClass} type="date" name="startDate" defaultValue={toDateInput(startDate)} required />
           </label>
-          <Button className="h-11">Lưu menu tuần</Button>
+          <SubmitButton className="h-11" pendingLabel="Đang lưu...">Lưu menu tuần</SubmitButton>
         </div>
 
         <div className="max-h-[calc(100vh-24rem)] min-h-[300px] overflow-auto rounded-lg border border-slate-300 bg-white">
@@ -124,10 +124,10 @@ export function WeeklyMenuEditor({ weeklyMenu }: { weeklyMenu?: WeeklyMenu | nul
             File CSV
             <input className="block h-11 w-full min-w-0 rounded-md border border-slate-200 bg-white px-3 py-2 text-sm" type="file" name="file" accept=".csv,text/csv" required />
           </label>
-          <Button variant="secondary">
+          <SubmitButton variant="secondary" pendingLabel="Đang import...">
             <Upload size={16} />
             Import
-          </Button>
+          </SubmitButton>
         </form>
         <div className="flex flex-wrap gap-2 md:justify-end">
           {weeklyMenu ? (
@@ -141,10 +141,10 @@ export function WeeklyMenuEditor({ weeklyMenu }: { weeklyMenu?: WeeklyMenu | nul
               </Link>
               <form action={deleteWeeklyMenuAction}>
                 <input type="hidden" name="id" value={weeklyMenu.id} />
-                <Button variant="danger">
+                <SubmitButton variant="danger" pendingLabel="Đang xóa...">
                   <Trash2 size={16} />
                   Xóa
-                </Button>
+                </SubmitButton>
               </form>
             </>
           ) : null}

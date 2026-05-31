@@ -2,16 +2,17 @@ import Link from "next/link";
 import { createMenuItemAction } from "@/actions/admin";
 import { WeeklyMenuEditor } from "@/components/weekly-menu-editor";
 import { Badge } from "@/components/ui/badge";
-import { Button, ButtonLink } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Field, inputClass } from "@/components/ui/form";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { prisma } from "@/lib/prisma";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 export default async function AdminMenuPage({
   searchParams,
 }: {
-  searchParams: { weekId?: string; new?: string; error?: string };
+  searchParams: { weekId?: string; new?: string; error?: string; imported?: string; created?: string };
 }) {
   const [items, weeklyMenus] = await Promise.all([
     prisma.menuItem.findMany({ orderBy: { createdAt: "desc" } }),
@@ -26,6 +27,7 @@ export default async function AdminMenuPage({
     : searchParams.new
       ? null
       : weeklyMenus[0] ?? null;
+  const errorMessage = getMenuErrorMessage(searchParams.error);
 
   return (
     <div className="grid min-w-0 gap-4">
@@ -51,7 +53,7 @@ export default async function AdminMenuPage({
               <Field label="Ảnh URL">
                 <input className={inputClass} name="imageUrl" placeholder="https://..." />
               </Field>
-              <Button>Tạo món</Button>
+              <SubmitButton pendingLabel="Đang tạo...">Tạo món</SubmitButton>
             </form>
           </CardContent>
         </Card>
@@ -70,9 +72,19 @@ export default async function AdminMenuPage({
             }
           />
           <CardContent>
-            {searchParams.error ? (
-              <div className="mb-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
-                Thao tác menu tuần chưa hợp lệ. Vui lòng kiểm tra ngày đầu tuần hoặc file CSV.
+            {errorMessage ? (
+              <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-700">
+                {errorMessage}
+              </div>
+            ) : null}
+            {searchParams.imported ? (
+              <div className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700">
+                Import CSV thành công. Đã cập nhật menu tuần đã chọn.
+              </div>
+            ) : null}
+            {searchParams.created ? (
+              <div className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700">
+                Tạo món thành công.
               </div>
             ) : null}
             <WeeklyMenuEditor weeklyMenu={selectedWeeklyMenu} />
@@ -123,4 +135,25 @@ export default async function AdminMenuPage({
       </div>
     </div>
   );
+}
+
+function getMenuErrorMessage(error?: string) {
+  switch (error) {
+    case "week-date":
+      return "Ngày tuần chưa hợp lệ. Hãy chọn ngày trong tuần cần tạo/import.";
+    case "week-exists":
+      return "Tuần này đã có menu. Hệ thống đã mở menu tuần đó để bạn chỉnh sửa.";
+    case "import-file":
+      return "Chưa chọn file CSV hoặc file đang rỗng.";
+    case "import-empty":
+      return "Không đọc được món nào từ file CSV. File cần có cột nhóm món, mã món và 6 cột ngày.";
+    case "import-parse":
+      return "File CSV chưa đúng định dạng. Hãy export file mẫu rồi nhập lại theo đúng cấu trúc.";
+    case "import":
+      return "Import CSV chưa thành công. Hãy kiểm tra ngày import và file CSV.";
+    case "create-item":
+      return "Không tạo được món. Hãy kiểm tra tên món, danh mục và giá.";
+    default:
+      return "";
+  }
 }

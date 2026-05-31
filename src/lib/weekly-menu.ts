@@ -126,7 +126,7 @@ export function serializeWeeklyMenuCsv({
 }
 
 export function parseWeeklyMenuCsv(text: string) {
-  const rows = parseCsvRows(text.replace(/^\uFEFF/, ""));
+  const rows = parseDelimitedRows(text.replace(/^\uFEFF/, ""));
   const byLabel = new Map(
     weeklyMenuGroups.flatMap((group) =>
       group.aliases.map((alias) => [normalize(alias), group] as const),
@@ -152,7 +152,7 @@ export function parseWeeklyMenuCsv(text: string) {
       first.includes("thu") ||
       first.includes("ca trua") ||
       second === "mon" ||
-      second === "món"
+      second === "mon"
     ) {
       continue;
     }
@@ -190,7 +190,28 @@ function escapeCsvValue(value: string) {
   return `"${safeValue.replace(/"/g, '""')}"`;
 }
 
-function parseCsvRows(text: string) {
+function parseDelimitedRows(text: string) {
+  return parseCsvRows(text, detectDelimiter(text));
+}
+
+function detectDelimiter(text: string) {
+  const contentLines = text
+    .split(/\r?\n/)
+    .filter((line) => line.trim() && !line.trim().toUpperCase().startsWith("MENU"))
+    .slice(0, 20);
+
+  if (!contentLines.length) return ",";
+
+  const candidates = [",", ";", "\t"];
+  return candidates
+    .map((delimiter) => ({
+      delimiter,
+      count: contentLines.reduce((total, line) => total + line.split(delimiter).length - 1, 0),
+    }))
+    .sort((a, b) => b.count - a.count)[0]?.delimiter ?? ",";
+}
+
+function parseCsvRows(text: string, delimiter: string) {
   const rows: string[][] = [];
   let row: string[] = [];
   let cell = "";
@@ -205,7 +226,7 @@ function parseCsvRows(text: string) {
       index++;
     } else if (char === '"') {
       quoted = !quoted;
-    } else if (char === "," && !quoted) {
+    } else if (char === delimiter && !quoted) {
       row.push(cell);
       cell = "";
     } else if ((char === "\n" || char === "\r") && !quoted) {

@@ -187,16 +187,21 @@ export async function markInvoicePaidAction(formData: FormData) {
 export async function createMenuItemAction(formData: FormData) {
   await requireAdmin();
 
-  await prisma.menuItem.create({
-    data: {
-      name: sanitizeText(String(formData.get("name") ?? ""), 120),
-      category: z.enum(["MAN", "CHAY", "NUOC", "THEM"]).parse(String(formData.get("category"))),
-      price: z.coerce.number().int().min(0).max(500000).parse(formData.get("price") || 35000),
-      imageUrl: sanitizeText(String(formData.get("imageUrl") || ""), 500),
-    },
-  });
+  try {
+    await prisma.menuItem.create({
+      data: {
+        name: sanitizeText(String(formData.get("name") ?? ""), 120),
+        category: z.enum(["MAN", "CHAY", "NUOC", "THEM"]).parse(String(formData.get("category"))),
+        price: z.coerce.number().int().min(0).max(500000).parse(formData.get("price") || 35000),
+        imageUrl: sanitizeText(String(formData.get("imageUrl") || ""), 500),
+      },
+    });
+  } catch {
+    redirect("/admin/menu?error=create-item");
+  }
 
   revalidatePath("/admin/menu");
+  redirect("/admin/menu?created=1");
 }
 
 export async function createDailyMenuAction(formData: FormData) {
@@ -293,11 +298,26 @@ export async function importWeeklyMenuAction(formData: FormData) {
   const startDate = normalizeWeekStart(parseDateInput(String(formData.get("startDate") ?? "")));
   const endDate = weekEndDate(startDate);
 
-  if (!(file instanceof File) || Number.isNaN(startDate.getTime())) {
-    redirect("/admin/menu?error=import");
+  if (Number.isNaN(startDate.getTime())) {
+    redirect("/admin/menu?error=week-date");
   }
 
-  const importedCells = parseWeeklyMenuCsv(await file.text());
+  if (!(file instanceof File) || file.size <= 0) {
+    redirect("/admin/menu?error=import-file");
+  }
+
+  let importedCells;
+
+  try {
+    importedCells = parseWeeklyMenuCsv(await file.text());
+  } catch {
+    redirect("/admin/menu?error=import-parse");
+  }
+
+  if (!importedCells.some((cell) => cell.dishName.trim())) {
+    redirect("/admin/menu?error=import-empty");
+  }
+
   const baseCells = emptyWeeklyCells();
   const importedMap = new Map(
     importedCells.map((cell) => [`${cell.group}:${cell.slot}:${cell.dayIndex}`, sanitizeText(cell.dishName, 255)]),
@@ -306,6 +326,7 @@ export async function importWeeklyMenuAction(formData: FormData) {
     ...cell,
     dishName: importedMap.get(`${cell.group}:${cell.slot}:${cell.dayIndex}`) ?? "",
   }));
+  let weeklyMenuId = "";
   const existingMenu = await prisma.weeklyMenu.findUnique({ where: { startDate } });
 
   await prisma.$transaction(async (tx) => {
@@ -317,6 +338,8 @@ export async function importWeeklyMenuAction(formData: FormData) {
       : await tx.weeklyMenu.create({
           data: { title: makeWeeklyTitle(startDate, endDate), startDate, endDate },
         });
+
+    weeklyMenuId = weeklyMenu.id;
 
     await tx.weeklyMenuCell.deleteMany({ where: { weeklyMenuId: weeklyMenu.id } });
     await tx.weeklyMenuCell.createMany({
@@ -330,6 +353,7 @@ export async function importWeeklyMenuAction(formData: FormData) {
   revalidatePath("/");
   revalidatePath("/dashboard");
   revalidateTag(WEEKLY_MENU_CACHE_TAG);
+  redirect(`/admin/menu?weekId=${weeklyMenuId}&imported=1`);
 }
 
 export async function deleteWeeklyMenuAction(formData: FormData) {
