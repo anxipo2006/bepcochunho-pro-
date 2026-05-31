@@ -5,6 +5,9 @@
 :root {
   --background: #f8fafc;
   --foreground: #0f172a;
+  --coral: #ff6f61;
+  --coral-dark: #c24135;
+  --teal: #10b8c2;
   scroll-behavior: smooth;
 }
 
@@ -30,6 +33,23 @@ a {
 
 ::selection {
   background: rgba(255, 111, 97, 0.22);
+  color: #0f172a;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 111, 97, 0.4);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 111, 97, 0.7);
 }
 
 button,
@@ -50,3 +70,42 @@ p,
 li {
   text-wrap: pretty;
 }
+
+/* Improved focus ring */
+:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Shimmer animation utility */
+@keyframes shimmer-move {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+.shimmer-effect {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer-effect::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: shimmer-move 2.5s ease-in-out infinite;
+}
+
+/* Section transition utility */
+.section-fade {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.section-fade.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+

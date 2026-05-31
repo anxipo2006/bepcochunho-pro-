@@ -7,22 +7,31 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const variants = {
-  primary: "bg-coral text-white hover:bg-coral-dark",
-  secondary: "border border-teal-200 bg-white text-teal-800 hover:bg-teal-50",
-  ghost: "text-slate-700 hover:bg-slate-100",
-  danger: "bg-red-600 text-white hover:bg-red-700",
+  primary:
+    "relative overflow-hidden bg-gradient-to-br from-coral via-coral-medium to-coral-dark text-white shadow-md shadow-coral/25 hover:shadow-coral-glow hover:brightness-110 active:scale-[0.98]",
+  secondary:
+    "relative overflow-hidden border border-teal-200 bg-white text-teal-800 shadow-sm hover:bg-teal-50 hover:border-teal-300 hover:shadow-teal-glow active:scale-[0.98]",
+  ghost:
+    "text-slate-600 hover:bg-slate-100 hover:text-slate-900 active:bg-slate-200 active:scale-[0.98]",
+  danger:
+    "bg-red-600 text-white shadow-sm hover:bg-red-700 hover:shadow-md active:scale-[0.98]",
 };
 
 export function Button({ className, variant = "primary", ...props }: ButtonProps) {
   return (
     <button
       className={cn(
-        "inline-flex h-11 items-center justify-center gap-2 rounded-lg px-4 text-sm font-semibold shadow-sm transition duration-200 hover:-translate-y-0.5 disabled:pointer-events-none disabled:translate-y-0 disabled:opacity-50",
+        "inline-flex h-11 items-center justify-center gap-2 rounded-xl px-5 text-sm font-semibold transition-all duration-200 disabled:pointer-events-none disabled:opacity-50",
         variants[variant],
         className,
       )}
       {...props}
-    />
+    >
+      {variant === "primary" && (
+        <span className="pointer-events-none absolute inset-0 -translate-x-full bg-[linear-gradient(110deg,transparent,rgba(255,255,255,0.25),transparent)] transition-transform duration-700 group-hover:translate-x-full" />
+      )}
+      {props.children}
+    </button>
   );
 }
 
@@ -41,12 +50,16 @@ export function ButtonLink({
     <Link
       href={href}
       className={cn(
-        "inline-flex h-11 items-center justify-center gap-2 rounded-lg px-4 text-sm font-semibold shadow-sm transition duration-200 hover:-translate-y-0.5",
+        "group inline-flex h-11 items-center justify-center gap-2 rounded-xl px-5 text-sm font-semibold transition-all duration-200 relative overflow-hidden",
         variants[variant ?? "primary"],
         className,
       )}
     >
+      {variant === "primary" && (
+        <span className="pointer-events-none absolute inset-0 -translate-x-full bg-[linear-gradient(110deg,transparent,rgba(255,255,255,0.25),transparent)] transition-transform duration-700 group-hover:translate-x-full" />
+      )}
       {children}
     </Link>
   );
 }
+

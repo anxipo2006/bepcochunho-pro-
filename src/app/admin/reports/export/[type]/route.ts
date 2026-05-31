@@ -105,11 +105,14 @@ type OrderWithDetails = Prisma.OrderGetPayload<{
 function makeRows(type: keyof typeof exportNames, orders: OrderWithDetails[]) {
   if (type === "orders") {
     return [
-      ["Ngày giao", "Khách hàng", "Trạng thái", "Món", "Danh mục", "Số lượng", "Đơn giá", "Thành tiền", "Ghi chú món", "Ghi chú đơn", "Giờ giao yêu cầu"],
+      ["Mã đơn", "Ngày đặt", "Ngày giao", "Khách hàng", "SĐT", "Trạng thái", "Món", "Danh mục", "Số lượng", "Đơn giá", "Thành tiền", "Ghi chú món", "Ghi chú đơn", "Giờ giao yêu cầu"],
       ...orders.flatMap((order) =>
         order.orderItems.map((item) => [
+          order.id,
+          formatDate(order.orderDate),
           formatDate(order.deliveryDate),
           order.user.companyName,
+          order.user.phone,
           statusLabel[order.status],
           item.menuItem.name,
           categoryLabel[item.menuItem.category],
@@ -126,12 +129,14 @@ function makeRows(type: keyof typeof exportNames, orders: OrderWithDetails[]) {
 
   if (type === "notes") {
     return [
-      ["Ngày giao", "Khách hàng", "Trạng thái", "Ghi chú đơn", "Giờ giao yêu cầu"],
+      ["Mã đơn", "Ngày giao", "Khách hàng", "SĐT", "Trạng thái", "Ghi chú đơn", "Giờ giao yêu cầu"],
       ...orders
         .filter((order) => order.note || order.user.deliveryTimeRequest)
         .map((order) => [
+          order.id,
           formatDate(order.deliveryDate),
           order.user.companyName,
+          order.user.phone,
           statusLabel[order.status],
           order.note ?? "",
           order.user.deliveryTimeRequest ?? "",
@@ -139,9 +144,9 @@ function makeRows(type: keyof typeof exportNames, orders: OrderWithDetails[]) {
     ];
   }
 
-  const itemTotals = new Map<string, { name: string; category: MenuCategory; quantity: number; amount: number }>();
+  const itemTotals = new Map<string, { name: string; category: MenuCategory; price: number; quantity: number; amount: number }>();
   const categoryTotals = new Map<MenuCategory, { label: string; quantity: number; amount: number }>();
-  const customerTotals = new Map<string, { name: string; orders: number; quantity: number; amount: number }>();
+  const customerTotals = new Map<string, { name: string; phone: string; email: string; address: string; orders: number; quantity: number; amount: number }>();
   const dayTotals = new Map<string, { date: Date; orders: number; quantity: number; amount: number }>();
 
   for (const order of orders) {
@@ -154,6 +159,7 @@ function makeRows(type: keyof typeof exportNames, orders: OrderWithDetails[]) {
       const itemCurrent = itemTotals.get(item.menuItemId) ?? {
         name: item.menuItem.name,
         category: item.menuItem.category,
+        price: Number(item.menuItem.price),
         quantity: 0,
         amount: 0,
       };
@@ -173,6 +179,9 @@ function makeRows(type: keyof typeof exportNames, orders: OrderWithDetails[]) {
 
     const customerCurrent = customerTotals.get(order.userId) ?? {
       name: order.user.companyName,
+      phone: order.user.phone,
+      email: order.user.email,
+      address: order.user.address ?? "",
       orders: 0,
       quantity: 0,
       amount: 0,
@@ -197,10 +206,10 @@ function makeRows(type: keyof typeof exportNames, orders: OrderWithDetails[]) {
 
   if (type === "items") {
     return [
-      ["Món", "Danh mục", "Số phần", "Doanh thu"],
+      ["Món", "Danh mục", "Đơn giá", "Số phần", "Doanh thu"],
       ...[...itemTotals.values()]
         .sort((a, b) => b.quantity - a.quantity)
-        .map((item) => [item.name, categoryLabel[item.category], item.quantity, formatCurrency(item.amount)]),
+        .map((item) => [item.name, categoryLabel[item.category], formatCurrency(item.price.toString()), item.quantity, formatCurrency(item.amount)]),
     ];
   }
 
@@ -213,10 +222,10 @@ function makeRows(type: keyof typeof exportNames, orders: OrderWithDetails[]) {
 
   if (type === "customers") {
     return [
-      ["Khách hàng", "Số đơn", "Số phần", "Doanh thu"],
+      ["Khách hàng", "SĐT", "Email", "Địa chỉ", "Số đơn", "Số phần", "Doanh thu"],
       ...[...customerTotals.values()]
         .sort((a, b) => b.amount - a.amount)
-        .map((item) => [item.name, item.orders, item.quantity, formatCurrency(item.amount)]),
+        .map((item) => [item.name, item.phone, item.email, item.address, item.orders, item.quantity, formatCurrency(item.amount)]),
     ];
   }
 

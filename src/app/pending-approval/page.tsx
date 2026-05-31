@@ -1,4 +1,7 @@
+import { LogOut } from "lucide-react";
+import { logoutAction } from "@/actions/auth";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export default function PendingApprovalPage() {
   return (
@@ -12,8 +15,15 @@ export default function PendingApprovalPage() {
           <p className="text-sm leading-6 text-slate-600">
             Vui lòng liên hệ hotline/Zalo 0337 998 639 nếu cần duyệt gấp.
           </p>
+          <form action={logoutAction} className="mt-6 border-t border-slate-100 pt-6">
+            <Button variant="secondary" className="w-full">
+              <LogOut size={16} />
+              Đăng xuất
+            </Button>
+          </form>
         </CardContent>
       </Card>
     </main>
   );
 }
+
