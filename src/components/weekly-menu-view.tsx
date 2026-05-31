@@ -2,12 +2,20 @@ import { CalendarDays, Utensils } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn, formatDate } from "@/lib/utils";
 import { getWeekDates, weeklyMenuGroups, weekDayLabels } from "@/lib/weekly-menu";
+import { MenuDishItem } from "@/components/menu-dish-item";
 
 type Cell = {
   group: string;
   slot: string;
   dayIndex: number;
   dishName: string;
+};
+
+type MenuItem = {
+  id: string;
+  name: string;
+  category: string;
+  price: string;
 };
 
 const groupStyles = {
@@ -63,12 +71,14 @@ export function WeeklyMenuView({
   cells,
   compact = false,
   targetDayIndex,
+  availableItems = [],
 }: {
   title: string;
   startDate: Date;
   cells: Cell[];
   compact?: boolean;
   targetDayIndex?: number;
+  availableItems?: MenuItem[];
 }) {
   const allDates = getWeekDates(startDate);
   const displayDays =
@@ -134,16 +144,24 @@ export function WeeklyMenuView({
                         {group.label}
                       </div>
                       {dishes.length ? (
-                        <div className="grid gap-1.5">
-                          {dishes.map((dish) => (
-                            <div
-                              key={dish.slot}
-                              className={cn("flex items-start gap-1.5 text-sm font-semibold leading-5", style?.text ?? "text-slate-700")}
-                            >
-                              <span className={cn("mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full", style?.dot ?? "bg-slate-400")} />
-                              {dish.name}
-                            </div>
-                          ))}
+                        <div className="grid gap-0.5">
+                          {dishes.map((dish) => {
+                            const availableItem = availableItems.find(
+                              (item) => item.name === dish.name && (item.category === group.key || (item.category === "THEM" && group.key !== "MON_CHINH" && group.key !== "MON_CHAY_CHINH" && group.key !== "MON_NUOC"))
+                            );
+                            
+                            return (
+                              <MenuDishItem 
+                                key={dish.slot} 
+                                dishName={dish.name} 
+                                itemId={availableItem?.id} 
+                                style={{
+                                  text: style?.text ?? "text-slate-700",
+                                  dot: style?.dot ?? "bg-slate-400"
+                                }} 
+                              />
+                            );
+                          })}
                         </div>
                       ) : (
                         <div className={cn("text-sm font-medium opacity-50", style?.text ?? "text-slate-500")}>

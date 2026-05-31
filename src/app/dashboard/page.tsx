@@ -68,6 +68,12 @@ export default async function DashboardPage({
     const item = menuItemByName.get(name);
     return item ? [item] : [];
   });
+  const availableItems = items.map((item) => ({
+    id: item.id,
+    name: item.name,
+    category: item.category,
+    price: item.price.toString(),
+  }));
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_400px] xl:grid-cols-[1fr_450px] lg:items-start">
@@ -109,7 +115,7 @@ export default async function DashboardPage({
         <Card className="order-last lg:order-none">
           <CardHeader
             title="Menu tham khảo"
-            description="Bảng menu của ngày giao đã chọn để bạn dễ dàng khảo sát và đối chiếu."
+            description="Bảng menu của ngày giao đã chọn để bạn dễ dàng khảo sát và đối chiếu. (Bấm vào món để thêm vào giỏ hàng)"
           />
           <CardContent>
             {weeklyMenu && dayIndex >= 0 && dayIndex < 6 ? (
@@ -118,6 +124,7 @@ export default async function DashboardPage({
                 startDate={weeklyMenu.startDate}
                 cells={weeklyMenu.cells}
                 targetDayIndex={dayIndex}
+                availableItems={availableItems}
               />
             ) : (
               <p className="text-sm text-slate-500">Chưa có menu cho ngày {formatDate(selectedDate)}. Vui lòng chọn ngày khác hoặc liên hệ Bếp.</p>
@@ -134,15 +141,10 @@ export default async function DashboardPage({
             action={<Badge tone="teal">Từ {formatCurrency(35000)}</Badge>}
           />
           <CardContent>
-            {items.length > 0 ? (
+            {availableItems.length > 0 ? (
               <OrderForm
                 deliveryDate={selectedDateInput}
-                items={items.map((item) => ({
-                  id: item.id,
-                  name: item.name,
-                  category: item.category,
-                  price: item.price.toString(),
-                }))}
+                items={availableItems}
               />
             ) : (
               <p className="text-sm text-slate-500">
