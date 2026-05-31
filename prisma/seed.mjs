@@ -94,7 +94,7 @@ async function main() {
     ["MON_CHINH", "1,1", ["Thịt kho tiêu", "Cá diêu hồng chiên", "Gà kho gừng", "Thịt kho trứng cút", "Tôm rim thịt", "Đậu hũ dồn thịt sốt cà"]],
     ["MON_CHINH", "1,2", ["Xíu mại sốt cà", "Sườn kho thơm", "Thịt chiên muối sả", "Cá ngừ chiên mắm", "Chả cá chiên", "Vịt kho sả ớt"]],
     ["MAN_PHU", "1,6", ["Rau luộc hoặc xào", "Rau luộc hoặc xào", "Rau luộc hoặc xào", "Rau luộc hoặc xào", "Rau luộc hoặc xào", "Rau luộc hoặc xào"]],
-    ["MON_CHAY_CHINH", "1,7", ["Sườn non chay", "Rau củ xào", "Sườn non xả ớt", "Rau củ xào", "Đậu hũ chiên", "Nấm đùi gà kho tiêu"]],
+    ["MON_CHAY_CHINH", "1,7", ["Sườn non chay", "Rau củ xào", "Sườn non sả ớt", "Rau củ xào", "Đậu hũ chiên", "Nấm đùi gà kho tiêu"]],
     ["MON_NUOC", "1,8", ["Mì Quảng", "", "Phở gà", "", "Bún bò", ""]],
     ["TRANG_MIENG", "TM", ["Trái cây theo mùa", "Trái cây theo mùa", "Trái cây theo mùa", "Trái cây theo mùa", "Trái cây theo mùa", "Trái cây theo mùa"]],
   ];
