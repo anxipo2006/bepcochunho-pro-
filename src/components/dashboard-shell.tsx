@@ -40,7 +40,7 @@ export async function DashboardShell({
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-offwhite pb-20 lg:pb-0">
-      <aside className="fixed inset-y-0 left-0 hidden w-64 border-r border-slate-200 bg-white p-4 lg:block">
+      <aside className="fixed inset-y-0 left-0 hidden w-64 border-r border-slate-200 bg-white/95 p-4 shadow-sm backdrop-blur lg:block">
         <Link href="/" className="flex items-center gap-2 font-bold text-slate-950">
           <span className="grid h-10 w-10 place-items-center rounded-md bg-coral text-white">
             <ChefHat size={20} />
@@ -54,7 +54,7 @@ export async function DashboardShell({
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-coral-soft hover:text-coral-dark"
               >
                 <Icon size={18} />
                 {item.label}
@@ -71,7 +71,7 @@ export async function DashboardShell({
       </aside>
 
       <div className="min-w-0 lg:pl-64">
-        <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 px-4 py-3 backdrop-blur sm:px-6 lg:px-8">
+        <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 px-4 py-3 shadow-sm shadow-slate-200/40 backdrop-blur sm:px-6 lg:px-8">
           <div className="flex items-center justify-between gap-4">
             <div className="min-w-0">
               <p className="text-sm text-slate-500">
@@ -90,7 +90,7 @@ export async function DashboardShell({
       </div>
 
       <nav
-        className="fixed inset-x-0 bottom-0 z-40 grid border-t border-slate-200 bg-white/95 px-2 py-2 backdrop-blur lg:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 grid border-t border-slate-200 bg-white/95 px-2 py-2 shadow-[0_-10px_30px_rgba(15,23,42,.08)] backdrop-blur lg:hidden"
         style={{ gridTemplateColumns: `repeat(${nav.length}, minmax(0, 1fr))` }}
       >
         {nav.map((item) => {
@@ -99,7 +99,7 @@ export async function DashboardShell({
             <Link
               key={item.href}
               href={item.href}
-              className="flex min-w-0 flex-col items-center gap-1 rounded-md px-1 py-2 text-[11px] font-semibold text-slate-600 hover:bg-slate-100"
+              className="flex min-w-0 flex-col items-center gap-1 rounded-lg px-1 py-2 text-[11px] font-semibold text-slate-600 transition hover:bg-coral-soft hover:text-coral-dark"
             >
               <Icon size={18} />
               <span className="truncate">{item.label}</span>

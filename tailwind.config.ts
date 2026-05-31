@@ -16,7 +16,7 @@ const config: Config = {
         offwhite: "#f8fafc",
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "ui-sans-serif", "system-ui"],
+        sans: ["var(--font-be-vietnam-pro)", "ui-sans-serif", "system-ui"],
         mono: ["var(--font-roboto-mono)", "ui-monospace", "SFMono-Regular"],
       },
     },

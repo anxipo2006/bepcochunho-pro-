@@ -102,11 +102,11 @@ export function MotionLanding({ consulted }: { consulted?: string }) {
     <main className="bg-offwhite text-slate-900">
       <HeroSection />
 
-      <section id="gioi-thieu" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <section id="gioi-thieu" className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-14">
         <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
           <div>
             <Badge tone="coral">Hồ sơ năng lực</Badge>
-            <h2 className="mt-4 text-3xl font-bold text-slate-950">
+            <h2 className="mt-4 text-2xl font-bold leading-tight text-slate-950 sm:text-3xl">
               Về Bếp Cô Chủ Nhỏ - nơi khởi nguồn năng lượng cho ngày dài làm việc
             </h2>
           </div>
@@ -123,10 +123,10 @@ export function MotionLanding({ consulted }: { consulted?: string }) {
         </div>
       </section>
 
-      <section id="dich-vu" className="bg-white py-16">
+      <section id="dich-vu" className="bg-white py-12 lg:py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Badge tone="teal">Vì sao chọn chúng tôi?</Badge>
-          <h2 className="mt-4 text-3xl font-bold text-slate-950">Năng lực phục vụ và giá trị cốt lõi</h2>
+          <h2 className="mt-4 text-2xl font-bold leading-tight text-slate-950 sm:text-3xl">Năng lực phục vụ và giá trị cốt lõi</h2>
           <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-5">
             {values.map((item) => {
               const Icon = item.icon;
@@ -142,11 +142,11 @@ export function MotionLanding({ consulted }: { consulted?: string }) {
         </div>
       </section>
 
-      <section id="thuc-don" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <section id="thuc-don" className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-14">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <Badge tone="coral">Thực đơn nổi bật</Badge>
-            <h2 className="mt-4 text-3xl font-bold text-slate-950">Bữa trưa phong phú, dễ ăn, dễ triển khai</h2>
+            <h2 className="mt-4 text-2xl font-bold leading-tight text-slate-950 sm:text-3xl">Bữa trưa phong phú, dễ ăn, dễ triển khai</h2>
           </div>
           <ButtonLink href="#menu-tuan" variant="secondary">Xem menu tuần</ButtonLink>
         </div>
@@ -171,10 +171,10 @@ export function MotionLanding({ consulted }: { consulted?: string }) {
         </div>
       </section>
 
-      <section id="quy-trinh" className="bg-white py-16">
+      <section id="quy-trinh" className="bg-white py-12 lg:py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Badge tone="teal">Quy trình đặt cơm</Badge>
-          <h2 className="mt-4 text-3xl font-bold text-slate-950">4 bước đơn giản để bắt đầu cùng Bếp</h2>
+          <h2 className="mt-4 text-2xl font-bold leading-tight text-slate-950 sm:text-3xl">4 bước đơn giản để bắt đầu cùng Bếp</h2>
           <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
             {steps.map(([title, text], index) => (
               <div key={title} className="rounded-lg border border-slate-200 bg-offwhite p-5">
@@ -189,11 +189,11 @@ export function MotionLanding({ consulted }: { consulted?: string }) {
         </div>
       </section>
 
-      <section id="lien-he" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <section id="lien-he" className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-14">
         <div className="grid gap-8 rounded-lg bg-slate-950 p-6 text-white shadow-xl lg:grid-cols-[1fr_420px] lg:p-10">
           <div>
             <Badge tone="coral">Liên hệ tư vấn</Badge>
-            <h2 className="mt-4 text-3xl font-bold">Đừng để nhân viên phải lo lắng bữa trưa.</h2>
+            <h2 className="mt-4 text-2xl font-bold leading-tight sm:text-3xl">Đừng để nhân viên phải lo lắng bữa trưa.</h2>
             <p className="mt-3 max-w-2xl leading-7 text-slate-300">
               Hãy để Bếp Cô Chủ Nhỏ lo. Liên hệ Zalo/Hotline để nhận báo giá chi tiết và thực đơn tuần mới nhất.
             </p>

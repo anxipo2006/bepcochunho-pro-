@@ -11,9 +11,13 @@
 body {
   background: var(--background);
   color: var(--foreground);
+  font-family: var(--font-be-vietnam-pro), ui-sans-serif, system-ui, sans-serif;
   max-width: 100%;
   overflow-x: hidden;
   text-rendering: optimizeLegibility;
+  font-synthesis-weight: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 * {
@@ -34,4 +38,15 @@ input,
 select,
 textarea {
   -webkit-tap-highlight-color: transparent;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p,
+li {
+  text-wrap: pretty;
 }

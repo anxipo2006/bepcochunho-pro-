@@ -5,26 +5,26 @@ import { LazyMotion, domAnimation, m } from "framer-motion";
 import { ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
 
-const headline = "Suáº¥t Äƒn doanh nghiá»‡p chuáº©n vá»‹ cÆ¡m nhÃ  táº¡i TP.HCM";
+const headline = "Suất ăn doanh nghiệp chuẩn vị cơm nhà tại TP.HCM";
 
 const words = headline.split(" ");
 
 const proofPoints = [
-  "Tá»« 35.000Ä‘/pháº§n",
-  "Menu tuáº§n rÃµ rÃ ng",
-  "Giao nÃ³ng Ä‘Ãºng giá»",
-  "Há»— trá»£ VAT, cÃ´ng ná»£",
+  "Từ 35.000đ/phần",
+  "Menu tuần rõ ràng",
+  "Giao nóng đúng giờ",
+  "Hỗ trợ VAT, công nợ",
 ];
 
 export function HeroSection() {
   return (
     <LazyMotion features={domAnimation}>
-      <section className="relative isolate min-h-[calc(100vh-4rem)] overflow-hidden bg-slate-950 text-white">
+      <section className="relative isolate overflow-hidden bg-slate-950 text-white lg:min-h-[calc(100vh-4rem)]">
         <AuroraBackground />
 
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_10%,rgba(255,255,255,.16),transparent_34%),linear-gradient(180deg,rgba(15,23,42,.16),rgba(15,23,42,.84))]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_10%,rgba(255,255,255,.16),transparent_34%),linear-gradient(180deg,rgba(15,23,42,.16),rgba(15,23,42,.84))]" />
 
-      <div className="relative mx-auto grid min-h-[calc(100vh-4rem)] max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1.02fr_.98fr] lg:px-8">
+        <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-12 sm:px-6 sm:py-14 lg:min-h-[calc(100vh-4rem)] lg:grid-cols-[1.02fr_.98fr] lg:px-8">
         <m.div
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
@@ -38,10 +38,10 @@ export function HeroSection() {
             className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold shadow-2xl backdrop-blur-xl"
           >
             <Sparkles size={16} className="text-coral" />
-            Báº¿p CÃ´ Chá»§ Nhá» phá»¥c vá»¥ cÃ´ng ty 50 - 200 pháº§n/ngÃ y
+            Bếp Cô Chủ Nhỏ phục vụ công ty 50 - 200 phần/ngày
           </m.div>
 
-          <h1 className="mt-7 flex flex-wrap gap-x-3 gap-y-2 text-4xl font-black leading-tight tracking-normal sm:text-6xl lg:text-7xl">
+          <h1 className="mt-7 flex flex-wrap gap-x-2 gap-y-1 text-[clamp(2.4rem,6vw,4.9rem)] font-black leading-[1.05] tracking-normal">
             {words.map((word, index) => (
               <m.span
                 key={`${word}-${index}`}
@@ -63,10 +63,10 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.62, duration: 0.5 }}
-            className="mt-6 max-w-2xl text-lg leading-8 text-white/78 sm:text-xl"
+            className="mt-6 max-w-2xl text-base leading-7 text-white/78 sm:text-lg sm:leading-8"
           >
-            Trá»n vá»‹ cÆ¡m nhÃ , Ä‘áº­m Ä‘Ã  tÃ¬nh thÃ¢n. Báº¿p lo menu Ä‘a dáº¡ng, giao Ä‘Ãºng giá»,
-            Ä‘Ã³ng gÃ³i sáº¡ch sáº½ vÃ  thanh toÃ¡n linh hoáº¡t cho Ä‘á»™i ngÅ© cá»§a báº¡n.
+            Trọn vị cơm nhà, đậm đà tình thân. Bếp lo menu đa dạng, giao đúng giờ,
+            đóng gói sạch sẽ và thanh toán linh hoạt cho đội ngũ của bạn.
           </m.p>
 
           <m.div
@@ -80,7 +80,7 @@ export function HeroSection() {
               className="group relative h-12 overflow-hidden rounded-full px-6 shadow-2xl shadow-coral/25"
             >
               <span className="absolute inset-0 -translate-x-full bg-[linear-gradient(110deg,transparent,rgba(255,255,255,.38),transparent)] transition-transform duration-1000 group-hover:translate-x-full" />
-              ÄÄƒng kÃ½ nháº­n menu
+              Đăng ký nhận menu
               <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
             </ButtonLink>
             <ButtonLink
@@ -88,7 +88,7 @@ export function HeroSection() {
               variant="secondary"
               className="h-12 rounded-full border-white/30 bg-white/15 px-6 text-white shadow-xl backdrop-blur-xl hover:bg-white/25"
             >
-              TÆ° váº¥n suáº¥t Äƒn
+              Tư vấn suất ăn
             </ButtonLink>
           </m.div>
 
@@ -120,7 +120,7 @@ export function HeroSection() {
           >
             <Image
               src="/optimized/1.webp"
-              alt="Khay cÆ¡m bento Báº¿p CÃ´ Chá»§ Nhá»"
+              alt="Khay cơm bento Bếp Cô Chủ Nhỏ"
               fill
               priority
               sizes="(min-width: 1024px) 46vw, 100vw"
@@ -128,10 +128,10 @@ export function HeroSection() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/72 via-slate-950/6 to-white/8 mix-blend-multiply" />
             <div className="absolute bottom-4 left-4 right-4 rounded-[1.5rem] border border-white/20 bg-white/18 p-4 shadow-2xl backdrop-blur-xl">
-              <div className="text-sm font-semibold text-white/75">Menu ná»•i báº­t hÃ´m nay</div>
-              <div className="mt-1 text-2xl font-black">CÆ¡m gÃ  sá»‘t máº¯m tá»i</div>
+              <div className="text-sm font-semibold text-white/75">Menu nổi bật hôm nay</div>
+              <div className="mt-1 text-2xl font-black">Cơm gà sốt mắm tỏi</div>
               <div className="mt-2 inline-flex rounded-full bg-white px-3 py-1 text-sm font-bold text-coral-dark">
-                35.000Ä‘/pháº§n
+                35.000đ/phần
               </div>
             </div>
           </m.div>
@@ -141,7 +141,7 @@ export function HeroSection() {
             transition={{ duration: 5.2, repeat: Infinity, ease: "easeInOut" }}
             className="absolute -left-3 top-8 hidden rounded-2xl border border-white/20 bg-white/15 px-4 py-3 text-sm font-bold shadow-2xl backdrop-blur-xl sm:block"
           >
-            Freeship theo há»£p Ä‘á»“ng
+            Freeship theo hợp đồng
           </m.div>
 
           <m.div
@@ -149,7 +149,7 @@ export function HeroSection() {
             transition={{ duration: 5.8, repeat: Infinity, ease: "easeInOut" }}
             className="absolute -right-2 bottom-12 hidden rounded-2xl border border-white/20 bg-white/15 px-4 py-3 text-sm font-bold shadow-2xl backdrop-blur-xl sm:block"
           >
-            Chá»‘t sá»‘ lÆ°á»£ng trÆ°á»›c 15h
+            Chốt số lượng trước 15h
           </m.div>
         </m.div>
       </div>
