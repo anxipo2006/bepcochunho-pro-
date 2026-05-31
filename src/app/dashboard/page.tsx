@@ -108,18 +108,19 @@ export default async function DashboardPage({
 
         <Card className="order-last lg:order-none">
           <CardHeader
-            title="Menu theo tuần"
-            description="Bảng menu tuần tương ứng với ngày giao đã chọn để HR/Admin khảo sát nội bộ và chốt số lượng."
+            title="Menu tham khảo"
+            description="Bảng menu của ngày giao đã chọn để bạn dễ dàng khảo sát và đối chiếu."
           />
           <CardContent>
-            {weeklyMenu ? (
+            {weeklyMenu && dayIndex >= 0 && dayIndex < 6 ? (
               <WeeklyMenuView
                 title={weeklyMenu.title}
                 startDate={weeklyMenu.startDate}
                 cells={weeklyMenu.cells}
+                targetDayIndex={dayIndex}
               />
             ) : (
-              <p className="text-sm text-slate-500">Chưa có menu tuần cho ngày {formatDate(selectedDate)}. Vui lòng chọn ngày khác hoặc liên hệ Bếp.</p>
+              <p className="text-sm text-slate-500">Chưa có menu cho ngày {formatDate(selectedDate)}. Vui lòng chọn ngày khác hoặc liên hệ Bếp.</p>
             )}
           </CardContent>
         </Card>

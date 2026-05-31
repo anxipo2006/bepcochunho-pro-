@@ -62,15 +62,21 @@ export function WeeklyMenuView({
   startDate,
   cells,
   compact = false,
+  targetDayIndex,
 }: {
   title: string;
   startDate: Date;
   cells: Cell[];
   compact?: boolean;
+  targetDayIndex?: number;
 }) {
-  const dates = getWeekDates(startDate);
+  const allDates = getWeekDates(startDate);
+  const displayDays =
+    targetDayIndex !== undefined && targetDayIndex >= 0 && targetDayIndex < 6
+      ? [{ date: allDates[targetDayIndex], dayIndex: targetDayIndex }]
+      : allDates.map((date, i) => ({ date, dayIndex: i }));
   const cellMap = new Map(cells.map((cell) => [`${cell.group}:${cell.slot}:${cell.dayIndex}`, cell.dishName]));
-  const displayTitle = `Menu tuần ${formatDate(dates[0])} - ${formatDate(dates[5])}`;
+  const displayTitle = `Menu tuần ${formatDate(allDates[0])} - ${formatDate(allDates[5])}`;
   const customTitle = title.trim();
   const showCustomTitle = customTitle && !customTitle.toUpperCase().startsWith("MENU");
 
@@ -84,7 +90,7 @@ export function WeeklyMenuView({
           {showCustomTitle ? <p className="mt-1 text-sm font-semibold text-slate-500">{customTitle}</p> : null}
           <p className="mt-2 flex items-center gap-2 text-sm font-medium text-slate-500">
             <CalendarDays size={15} />
-            Thứ Hai đến Thứ Bảy, {formatDate(dates[0])} - {formatDate(dates[5])}
+            Thứ Hai đến Thứ Bảy, {formatDate(allDates[0])} - {formatDate(allDates[5])}
           </p>
         </div>
         <div className="inline-flex w-fit items-center gap-2 rounded-xl border border-teal-200/60 bg-teal-50 px-4 py-2 text-sm font-semibold text-teal-700 shadow-sm">
@@ -94,8 +100,8 @@ export function WeeklyMenuView({
       </div>
 
       {/* Day cards */}
-      <div className="grid gap-4 lg:grid-cols-3 2xl:grid-cols-6">
-        {dates.map((date, dayIndex) => {
+      <div className={cn("grid gap-4", displayDays.length === 1 ? "grid-cols-1" : "lg:grid-cols-3 2xl:grid-cols-6")}>
+        {displayDays.map(({ date, dayIndex }) => {
           const gradient = dayGradients[dayIndex] ?? dayGradients[0];
           return (
             <article
