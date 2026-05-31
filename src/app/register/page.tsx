@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { registerAction } from "@/actions/auth";
 import { AuthCard } from "@/components/auth-card";
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { Field, inputClass } from "@/components/ui/form";
 
 const errorMessage = {
@@ -59,7 +59,7 @@ export default function RegisterPage({ searchParams }: { searchParams: { error?:
             required
           />
         </Field>
-        <Button className="mt-2 w-full">Gửi đăng ký</Button>
+        <SubmitButton className="mt-2 w-full" pendingLabel="Đang gửi...">Gửi đăng ký</SubmitButton>
       </form>
     </AuthCard>
   );

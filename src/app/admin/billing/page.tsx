@@ -1,6 +1,6 @@
 import { closeInvoicesAction, markInvoicePaidAction } from "@/actions/admin";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { inputClass } from "@/components/ui/form";
 import { prisma } from "@/lib/prisma";
@@ -24,7 +24,7 @@ export default async function AdminBillingPage({ searchParams }: { searchParams:
           ) : null}
           <form action={closeInvoicesAction} className="flex flex-col gap-3 sm:flex-row">
             <input className={inputClass} name="billingMonth" defaultValue={billingMonthFromDate()} placeholder="06-2026" />
-            <Button>Chốt công nợ</Button>
+            <SubmitButton pendingLabel="Đang chốt...">Chốt công nợ</SubmitButton>
           </form>
         </CardContent>
       </Card>
@@ -46,7 +46,7 @@ export default async function AdminBillingPage({ searchParams }: { searchParams:
               {invoice.status === "UNPAID" ? (
                 <form action={markInvoicePaidAction}>
                   <input type="hidden" name="invoiceId" value={invoice.id} />
-                  <Button>Xác nhận đã thanh toán</Button>
+                  <SubmitButton pendingLabel="Đang xác nhận...">Xác nhận đã thanh toán</SubmitButton>
                 </form>
               ) : null}
             </div>

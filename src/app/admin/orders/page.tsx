@@ -1,6 +1,6 @@
 import { updateOrderStatusAction } from "@/actions/admin";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { inputClass } from "@/components/ui/form";
 import { prisma } from "@/lib/prisma";
@@ -59,7 +59,7 @@ export default async function AdminOrdersPage() {
                   <option value="DELIVERED">Đã giao</option>
                   <option value="CANCELLED">Đã hủy</option>
                 </select>
-                <Button>Lưu</Button>
+                <SubmitButton pendingLabel="Đang lưu...">Lưu</SubmitButton>
               </form>
             </div>
           </div>

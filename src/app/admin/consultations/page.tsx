@@ -1,7 +1,7 @@
 import { ConsultationStatus } from "@prisma/client";
 import { updateConsultationStatusAction } from "@/actions/consultation";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { inputClass } from "@/components/ui/form";
 import { prisma } from "@/lib/prisma";
@@ -45,7 +45,7 @@ export default async function AdminConsultationsPage() {
                 <option value="CONTACTED">Đã liên hệ</option>
                 <option value="CLOSED">Đã chốt</option>
               </select>
-              <Button>Cập nhật</Button>
+              <SubmitButton pendingLabel="Đang cập nhật...">Cập nhật</SubmitButton>
             </form>
           </div>
         ))}

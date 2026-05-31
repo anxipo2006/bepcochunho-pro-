@@ -2,7 +2,7 @@
 
 import { ShoppingCart } from "lucide-react";
 import { createOrderAction } from "@/actions/order";
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { inputClass } from "@/components/ui/form";
 import { useCartStore } from "@/store/cart-store";
 import { formatCurrency } from "@/lib/utils";
@@ -71,10 +71,10 @@ export function OrderForm({
           <div className="text-sm text-slate-500">Tổng tạm tính</div>
           <div className="text-2xl font-bold text-coral-dark">{formatCurrency(total)}</div>
         </div>
-        <Button className="h-12 px-6" disabled={total <= 0}>
+        <SubmitButton className="h-12 px-6" disabled={total <= 0} pendingLabel="Đang tạo đơn...">
           <ShoppingCart size={18} />
           Tạo đơn hàng
-        </Button>
+        </SubmitButton>
       </div>
     </form>
   );

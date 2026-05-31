@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { loginAction } from "@/actions/auth";
 import { AuthCard } from "@/components/auth-card";
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { Field, inputClass } from "@/components/ui/form";
 
 export default function LoginPage({
@@ -46,7 +46,7 @@ export default function LoginPage({
             required
           />
         </Field>
-        <Button className="mt-2 w-full">Đăng nhập</Button>
+        <SubmitButton className="mt-2 w-full" pendingLabel="Đang đăng nhập...">Đăng nhập</SubmitButton>
       </form>
     </AuthCard>
   );

@@ -1,6 +1,6 @@
 import { approveUserAction } from "@/actions/admin";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { prisma } from "@/lib/prisma";
 import { formatCurrency } from "@/lib/utils";
@@ -36,9 +36,9 @@ export default async function AdminClientsPage() {
             <form action={approveUserAction}>
               <input type="hidden" name="userId" value={user.id} />
               <input type="hidden" name="isApproved" value={String(!user.isApproved)} />
-              <Button variant={user.isApproved ? "secondary" : "primary"}>
+              <SubmitButton variant={user.isApproved ? "secondary" : "primary"} pendingLabel="Đang cập nhật...">
                 {user.isApproved ? "Tạm khóa" : "Duyệt tài khoản"}
-              </Button>
+              </SubmitButton>
             </form>
           </div>
         ))}
