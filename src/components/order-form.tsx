@@ -14,12 +14,6 @@ type MenuItem = {
   price: string;
 };
 
-const categoryLabel: Record<string, string> = {
-  MAN: "Món mặn",
-  CHAY: "Món chay",
-  NUOC: "Món nước",
-  THEM: "Món thêm",
-};
 
 export function OrderForm({
   deliveryDate,
