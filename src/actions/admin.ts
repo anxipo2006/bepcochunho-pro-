@@ -89,15 +89,41 @@ export async function approveUserAction(formData: FormData) {
 export async function updateOrderStatusAction(formData: FormData) {
   await requireAdmin();
   const orderId = cuidSchema.parse(String(formData.get("orderId") ?? ""));
-  const status = z.nativeEnum(OrderStatus).parse(String(formData.get("status")));
+  const newStatus = z.nativeEnum(OrderStatus).parse(String(formData.get("status")));
 
-  await prisma.order.update({
+  const order = await prisma.order.findUnique({
     where: { id: orderId },
-    data: { status },
+    select: { id: true, status: true, totalAmount: true, userId: true },
+  });
+
+  if (!order) return;
+  if (order.status === newStatus) return;
+
+  await prisma.$transaction(async (tx) => {
+    await tx.order.update({
+      where: { id: orderId },
+      data: { status: newStatus },
+    });
+
+    // Nếu chuyển sang DELIVERED -> Cộng công nợ
+    if (newStatus === OrderStatus.DELIVERED) {
+      await tx.user.update({
+        where: { id: order.userId },
+        data: { debtBalance: { increment: order.totalAmount } },
+      });
+    }
+    // Nếu chuyển từ DELIVERED sang trạng thái khác (Undo) -> Trừ công nợ
+    else if (order.status === OrderStatus.DELIVERED) {
+      await tx.user.update({
+        where: { id: order.userId },
+        data: { debtBalance: { decrement: order.totalAmount } },
+      });
+    }
   });
 
   revalidatePath("/admin");
   revalidatePath("/admin/orders");
+  revalidatePath("/admin/clients");
 }
 
 export async function closeInvoicesAction(formData: FormData) {
