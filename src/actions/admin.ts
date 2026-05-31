@@ -171,11 +171,7 @@ export async function closeInvoicesAction(formData: FormData) {
         where: { id: { in: user.orders.map((order) => order.id) } },
         data: { invoiceId: invoice.id },
       });
-
-      await tx.user.update({
-        where: { id: user.id },
-        data: { debtBalance: { increment: totalAmount } },
-      });
+      // Không cộng dồn công nợ ở đây nữa vì đã cộng ngay lúc giao hàng (DELIVERED)
     });
   }
 
