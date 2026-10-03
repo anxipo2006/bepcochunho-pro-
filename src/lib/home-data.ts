@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 
 export const WEEKLY_MENU_CACHE_TAG = "weekly-menu";
 
-export const getActiveWeeklyMenu = unstable_cache(
+const getCachedActiveWeeklyMenu = unstable_cache(
   async () =>
     prisma.weeklyMenu.findFirst({
       where: { isActive: true },
@@ -16,3 +16,12 @@ export const getActiveWeeklyMenu = unstable_cache(
     tags: [WEEKLY_MENU_CACHE_TAG],
   },
 );
+
+export async function getActiveWeeklyMenu() {
+  try {
+    return await getCachedActiveWeeklyMenu();
+  } catch (error) {
+    console.error("Unable to load public weekly menu", error);
+    return null;
+  }
+}

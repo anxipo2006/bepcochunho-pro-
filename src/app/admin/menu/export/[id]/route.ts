@@ -4,7 +4,8 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { serializeWeeklyMenuCsv } from "@/lib/weekly-menu";
 
-export async function GET(_: Request, { params }: { params: { id: string } }) {
+export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const session = await auth();
 
   const user = session?.user
@@ -16,7 +17,7 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
   }
 
   const weeklyMenu = await prisma.weeklyMenu.findUniqueOrThrow({
-    where: { id: params.id },
+    where: { id },
     include: { cells: true },
   });
 

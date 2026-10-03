@@ -20,7 +20,7 @@ const orderItemSchema = z.object({
 });
 
 export async function createOrderAction(formData: FormData) {
-  assertSameOrigin();
+  await assertSameOrigin();
   const session = await auth();
 
   if (!session?.user) {
@@ -114,7 +114,7 @@ export async function createOrderAction(formData: FormData) {
 }
 
 export async function cancelOrderAction(formData: FormData) {
-  assertSameOrigin();
+  await assertSameOrigin();
   const session = await auth();
 
   if (!session?.user) {

@@ -12,8 +12,9 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 export default async function AdminMenuPage({
   searchParams,
 }: {
-  searchParams: { weekId?: string; new?: string; error?: string; imported?: string; created?: string };
+  searchParams: Promise<{ weekId?: string; new?: string; error?: string; imported?: string; created?: string }>;
 }) {
+  const query = await searchParams;
   const [items, weeklyMenus] = await Promise.all([
     prisma.menuItem.findMany({ orderBy: { createdAt: "desc" } }),
     prisma.weeklyMenu.findMany({
@@ -22,12 +23,12 @@ export default async function AdminMenuPage({
       include: { cells: { orderBy: [{ group: "asc" }, { slot: "asc" }, { dayIndex: "asc" }] } },
     }),
   ]);
-  const selectedWeeklyMenu = searchParams.weekId
-    ? weeklyMenus.find((menu) => menu.id === searchParams.weekId) ?? null
-    : searchParams.new
+  const selectedWeeklyMenu = query.weekId
+    ? weeklyMenus.find((menu) => menu.id === query.weekId) ?? null
+    : query.new
       ? null
       : weeklyMenus[0] ?? null;
-  const errorMessage = getMenuErrorMessage(searchParams.error);
+  const errorMessage = getMenuErrorMessage(query.error);
 
   return (
     <div className="grid min-w-0 gap-4">
@@ -77,12 +78,12 @@ export default async function AdminMenuPage({
                 {errorMessage}
               </div>
             ) : null}
-            {searchParams.imported ? (
+            {query.imported ? (
               <div className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700">
                 Import CSV thành công. Đã cập nhật menu tuần đã chọn.
               </div>
             ) : null}
-            {searchParams.created ? (
+            {query.created ? (
               <div className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700">
                 Tạo món thành công.
               </div>

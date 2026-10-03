@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ChefHat, LogOut } from "lucide-react";
+import Image from "next/image";
+import { LogOut } from "lucide-react";
 import { logoutAction } from "@/actions/auth";
 import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
@@ -43,11 +44,9 @@ export async function DashboardShell({
       <aside className="fixed inset-y-0 left-0 hidden w-64 border-r border-slate-200/80 bg-white p-4 shadow-sm lg:flex lg:flex-col">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 font-bold text-slate-950">
-          <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-coral to-coral-dark text-white shadow-md shadow-coral/25">
-            <ChefHat size={20} />
-          </span>
+          <Image src="/men-logo-mark.png" alt="" width={40} height={40} unoptimized className="rounded-xl object-contain" />
           <div>
-            <div className="text-sm font-extrabold leading-none">Bếp Cô Chủ Nhỏ</div>
+            <div className="font-serif text-sm font-bold leading-none">Cơm Văn Phòng Mến</div>
             <div className="mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
               {mode === "admin" ? "Quản trị" : "Khách hàng"}
             </div>

@@ -6,7 +6,8 @@ import { inputClass } from "@/components/ui/form";
 import { prisma } from "@/lib/prisma";
 import { billingMonthFromDate, formatCurrency } from "@/lib/utils";
 
-export default async function AdminBillingPage({ searchParams }: { searchParams: { closed?: string } }) {
+export default async function AdminBillingPage({ searchParams }: { searchParams: Promise<{ closed?: string }> }) {
+  const query = await searchParams;
   const invoices = await prisma.invoice.findMany({
     orderBy: { createdAt: "desc" },
     include: { user: true },
@@ -17,9 +18,9 @@ export default async function AdminBillingPage({ searchParams }: { searchParams:
       <Card>
         <CardHeader title="Chốt công nợ" description="Gom các đơn đã xác nhận hoặc đã giao nhưng chưa có invoice theo tháng." />
         <CardContent>
-          {searchParams.closed ? (
+          {query.closed ? (
             <div className="mb-4 rounded-md bg-teal-50 px-3 py-2 text-sm text-teal-700">
-              Đã chốt công nợ tháng {searchParams.closed}.
+              Đã chốt công nợ tháng {query.closed}.
             </div>
           ) : null}
           <form action={closeInvoicesAction} className="flex flex-col gap-3 sm:flex-row">

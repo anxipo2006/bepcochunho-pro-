@@ -48,13 +48,14 @@ function dayKey(date: Date) {
 export default async function AdminPage({
   searchParams,
 }: {
-  searchParams: { from?: string; to?: string; status?: string };
+  searchParams: Promise<{ from?: string; to?: string; status?: string }>;
 }) {
+  const query = await searchParams;
   const defaults = defaultRange();
-  const fromInput = searchParams.from || defaults.from;
-  const toInput = searchParams.to || defaults.to;
-  const status = Object.keys(statusLabel).includes(searchParams.status ?? "")
-    ? searchParams.status || "ALL"
+  const fromInput = query.from || defaults.from;
+  const toInput = query.to || defaults.to;
+  const status = Object.keys(statusLabel).includes(query.status ?? "")
+    ? query.status || "ALL"
     : "ALL";
   const orderStatus = status === "ALL" ? undefined : (status as OrderStatus);
   const fromDate = parseDateInput(fromInput);
@@ -187,7 +188,7 @@ export default async function AdminPage({
         <SummaryCard label="Giá trị TB/đơn" value={formatCurrency(averageOrder)} tone="teal" />
         <SummaryCard label="Chờ xác nhận" value={(statusTotals.get("PENDING") ?? 0).toString()} tone="amber" />
         <SummaryCard label="Đã xác nhận" value={(statusTotals.get("CONFIRMED") ?? 0).toString()} tone="teal" />
-        <SummaryCard label="Đã giao" value={(statusTotals.get("DELIVERED") ?? 0).toString()} tone="green" />
+        <SummaryCard label="Đã giao" value={((statusTotals.get("DELIVERED") ?? 0) + (statusTotals.get("PAID") ?? 0) + (statusTotals.get("DEBT") ?? 0)).toString()} tone="green" />
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">

@@ -4,8 +4,11 @@ import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
-  const email = 'admin@cochunho.vn';
-  const plainPassword = 'admin123'; // Mật khẩu mới >= 6 ký tự
+  const email = process.env.SEED_ADMIN_EMAIL?.trim().toLowerCase();
+  const plainPassword = process.env.SEED_ADMIN_PASSWORD;
+  if (!email || !plainPassword || plainPassword.length < 16) {
+    throw new Error('Set SEED_ADMIN_EMAIL and a unique SEED_ADMIN_PASSWORD (at least 16 characters).');
+  }
   const password = await bcrypt.hash(plainPassword, 10);
 
   const admin = await prisma.user.upsert({
@@ -18,16 +21,14 @@ async function main() {
     create: {
       email,
       password,
-      companyName: 'Quản Trị Hệ Thống',
+      companyName: 'Cơm Văn Phòng Mến',
       phone: '0337998639',
       role: 'ADMIN',
       isApproved: true,
     },
   });
   
-  console.log(`Successfully created/updated ADMIN account!`);
-  console.log(`Email: ${admin.email}`);
-  console.log(`Password: ${plainPassword}`);
+  console.log(`Created/updated admin account: ${admin.email}`);
 }
 
 main()

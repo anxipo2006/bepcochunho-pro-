@@ -1,7 +1,7 @@
 "use server";
 
 import { InvoiceStatus, MenuCategory, OrderStatus, Role } from "@prisma/client";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { auth } from "@/auth";
@@ -22,7 +22,7 @@ const cuidSchema = z.string().cuid();
 const billingMonthSchema = z.string().regex(/^(0[1-9]|1[0-2])-\d{4}$/);
 
 async function requireAdmin() {
-  assertSameOrigin();
+  await assertSameOrigin();
   const session = await auth();
 
   if (!session?.user || session.user.role !== Role.ADMIN) {
@@ -254,7 +254,7 @@ export async function createDailyMenuAction(formData: FormData) {
   revalidatePath("/admin/menu");
   revalidatePath("/");
   revalidatePath("/dashboard");
-  revalidateTag(WEEKLY_MENU_CACHE_TAG);
+  updateTag(WEEKLY_MENU_CACHE_TAG);
 }
 
 export async function upsertWeeklyMenuAction(formData: FormData) {
@@ -311,7 +311,7 @@ export async function upsertWeeklyMenuAction(formData: FormData) {
   revalidatePath("/admin/menu");
   revalidatePath("/");
   revalidatePath("/dashboard");
-  revalidateTag(WEEKLY_MENU_CACHE_TAG);
+  updateTag(WEEKLY_MENU_CACHE_TAG);
 }
 
 export async function importWeeklyMenuAction(formData: FormData) {
@@ -374,7 +374,7 @@ export async function importWeeklyMenuAction(formData: FormData) {
   revalidatePath("/admin/menu");
   revalidatePath("/");
   revalidatePath("/dashboard");
-  revalidateTag(WEEKLY_MENU_CACHE_TAG);
+  updateTag(WEEKLY_MENU_CACHE_TAG);
   redirect(`/admin/menu?weekId=${weeklyMenuId}&imported=1`);
 }
 
@@ -387,5 +387,5 @@ export async function deleteWeeklyMenuAction(formData: FormData) {
   revalidatePath("/admin/menu");
   revalidatePath("/");
   revalidatePath("/dashboard");
-  revalidateTag(WEEKLY_MENU_CACHE_TAG);
+  updateTag(WEEKLY_MENU_CACHE_TAG);
 }

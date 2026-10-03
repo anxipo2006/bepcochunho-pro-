@@ -10,8 +10,8 @@ export function sanitizeText(value: string, maxLength = 255) {
     .slice(0, maxLength);
 }
 
-export function getClientIp() {
-  const headerStore = headers();
+export async function getClientIp() {
+  const headerStore = await headers();
   return (
     headerStore.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     headerStore.get("x-real-ip") ||
@@ -22,6 +22,16 @@ export function getClientIp() {
 export function rateLimit(key: string, limit: number, windowMs: number) {
   const now = Date.now();
   const current = buckets.get(key);
+
+  if (buckets.size >= 5000 && !current) {
+    for (const [bucketKey, bucket] of buckets) {
+      if (bucket.resetAt <= now) buckets.delete(bucketKey);
+    }
+    if (buckets.size >= 5000) {
+      const oldestKey = buckets.keys().next().value;
+      if (oldestKey) buckets.delete(oldestKey);
+    }
+  }
 
   if (!current || current.resetAt <= now) {
     buckets.set(key, { count: 1, resetAt: now + windowMs });
@@ -35,12 +45,19 @@ export function rateLimit(key: string, limit: number, windowMs: number) {
   };
 }
 
-export function assertSameOrigin() {
-  const headerStore = headers();
+export async function assertSameOrigin() {
+  const headerStore = await headers();
   const origin = headerStore.get("origin");
   const host = headerStore.get("host");
 
-  if (!origin || !host || new URL(origin).host !== host) {
+  let originHost = "";
+  try {
+    originHost = origin ? new URL(origin).host.toLowerCase() : "";
+  } catch {
+    throw new Error("Invalid request origin");
+  }
+
+  if (!originHost || !host || originHost !== host.toLowerCase()) {
     throw new Error("Invalid request origin");
   }
 }

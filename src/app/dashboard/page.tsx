@@ -26,10 +26,11 @@ function dayIndexInWeek(date: Date, weekStart: Date) {
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: { error?: string; deliveryDate?: string };
+  searchParams: Promise<{ error?: string; deliveryDate?: string }>;
 }) {
+  const query = await searchParams;
   const session = await auth();
-  const selectedDateInput = searchParams.deliveryDate || defaultDeliveryDate();
+  const selectedDateInput = query.deliveryDate || defaultDeliveryDate();
   const selectedDate = parseDateInput(selectedDateInput);
 
   const weeklyMenu = await prisma.weeklyMenu.findFirst({
@@ -88,7 +89,7 @@ export default async function DashboardPage({
             </CardContent>
           </Card>
         ) : null}
-        {searchParams.error ? (
+        {query.error ? (
           <Card className="border-red-200 bg-red-50">
             <CardContent>
               <p className="text-sm text-red-700">Không thể tạo đơn. Vui lòng kiểm tra lại menu hoặc số lượng.</p>

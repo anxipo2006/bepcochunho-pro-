@@ -14,13 +14,13 @@ const registerSchema = z.object({
   phone: z.string().trim().regex(/^[0-9+\-\s().]{8,20}$/).transform((value) => sanitizeText(value, 20)),
   address: z.string().trim().max(255).optional().transform((value) => value ? sanitizeText(value, 255) : undefined),
   deliveryTimeRequest: z.string().trim().max(120).optional().transform((value) => value ? sanitizeText(value, 120) : undefined),
-  password: z.string().min(8).max(128),
+  password: z.string().min(12).max(128),
 });
 
 export async function registerAction(formData: FormData) {
-  assertSameOrigin();
+  await assertSameOrigin();
 
-  const ip = getClientIp();
+  const ip = await getClientIp();
   const emailKey = String(formData.get("email") ?? "").toLowerCase().trim() || "empty";
   const ipLimit = rateLimit(`register:ip:${ip}`, 5, 60 * 60 * 1000);
   const emailLimit = rateLimit(`register:email:${emailKey}`, 3, 60 * 60 * 1000);
@@ -59,7 +59,7 @@ export async function registerAction(formData: FormData) {
 }
 
 export async function loginAction(formData: FormData) {
-  assertSameOrigin();
+  await assertSameOrigin();
 
   try {
     await signIn("credentials", {
@@ -77,6 +77,6 @@ export async function loginAction(formData: FormData) {
 }
 
 export async function logoutAction() {
-  assertSameOrigin();
+  await assertSameOrigin();
   await signOut({ redirectTo: "/" });
 }

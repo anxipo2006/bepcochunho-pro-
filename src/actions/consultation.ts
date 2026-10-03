@@ -15,8 +15,8 @@ const consultationSchema = z.object({
 });
 
 export async function createConsultationAction(formData: FormData) {
-  assertSameOrigin();
-  const ipLimit = rateLimit(`consultation:ip:${getClientIp()}`, 10, 60 * 60 * 1000);
+  await assertSameOrigin();
+  const ipLimit = rateLimit(`consultation:ip:${await getClientIp()}`, 10, 60 * 60 * 1000);
 
   if (!ipLimit.ok) {
     redirect("/?consulted=rate-limit#lien-he");
@@ -41,7 +41,7 @@ export async function createConsultationAction(formData: FormData) {
 }
 
 export async function updateConsultationStatusAction(formData: FormData) {
-  assertSameOrigin();
+  await assertSameOrigin();
   const session = await auth();
 
   if (!session?.user || session.user.role !== Role.ADMIN) {

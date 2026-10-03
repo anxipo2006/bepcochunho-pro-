@@ -1,89 +1,45 @@
-# Deployment Plan
+# Triển khai Cơm Văn Phòng Mến trên VPS NAT
 
-## Chot phuong an
+## Trạng thái cần xác nhận
 
-- App: Vercel.
-- Source code: GitHub.
-- Database production: MySQL managed/cloud, vi du Railway MySQL hoac Aiven MySQL.
-- Docker: chi dung local development de chay MySQL tren may ca nhan.
-- Domain: mua sau van duoc. Deploy truoc bang domain tam cua Vercel, sau do add domain that vao Vercel.
+- VPS `trong-an-06` đang ở trạng thái **STOPPED** khi kiểm tra ngày 03/10/2026.
+- `tiay.click` đang phục vụ một website khác. Chỉ cập nhật DNS sau khi xác nhận hostname dành cho Cơm Văn Phòng Mến; `men.tiay.click` là một lựa chọn không ảnh hưởng website gốc.
+- Kết nối tới MySQL đang cấu hình trong máy phát triển chưa hoạt động tại thời điểm kiểm tra. Trang chủ vẫn hiển thị, nhưng menu động, đăng nhập và biểu mẫu liên hệ cần database hoạt động.
 
-## Vi sao day la phuong an toi uu hien tai
+## Kiến trúc phù hợp
 
-- Khong can tu quan tri VPS, SSL, firewall, process manager.
-- Vercel deploy nhanh, co preview deployment cho moi lan push.
-- MySQL cloud chay rieng, Vercel truy cap duoc qua `DATABASE_URL`.
-- Docker local giu moi truong dev giong production ma khong lam phuc tap deploy.
+- VPS NAT chạy một tiến trình Next.js `standalone` trên `127.0.0.1:3000` dưới tài khoản Linux riêng; quản lý bằng `systemd`.
+- Công khai qua Cloudflare Tunnel hoặc cổng HTTP/HTTPS được cấp trong panel NAT, kèm HTTPS ở điểm truy cập công khai. Không trỏ bản ghi A của tên miền tới IP NAT nội bộ.
+- MySQL được quản lý bên ngoài VPS, có sao lưu. VPS hiện có 1 GiB RAM; tránh chạy đồng thời cả ứng dụng, MySQL và bản build tại đây.
+- Chỉ cho phép truy cập SSH từ các nguồn cần thiết nếu panel hỗ trợ; tắt đăng nhập root bằng mật khẩu sau khi đã thiết lập khóa SSH và tài khoản quản trị khác.
 
-## Local development
+## Chuẩn bị môi trường production
 
-```bash
-npm install
-copy .env.example .env
-docker compose up -d
-npm run db:push
-npm run db:seed
-npm run dev
-```
-
-Mo `http://localhost:3000`.
-
-## Vercel deployment
-
-1. Push code len GitHub.
-2. Tao MySQL cloud database.
-3. Lay connection string dang:
+Tạo file môi trường ngoài Git trên máy chủ, quyền đọc chỉ dành cho tài khoản chạy ứng dụng:
 
 ```env
+NODE_ENV="production"
+PORT="3000"
+HOSTNAME="127.0.0.1"
 DATABASE_URL="mysql://USER:PASSWORD@HOST:PORT/DATABASE"
+AUTH_SECRET="generate-a-long-random-secret"
+AUTH_URL="https://men.tiay.click"
+AUTH_TRUST_HOST="true"
 ```
 
-4. Vao Vercel -> Project -> Settings -> Environment Variables, them:
+Thay hostname bằng tên miền được chọn thực tế. `AUTH_TRUST_HOST` chỉ dùng sau khi đặt ứng dụng sau reverse proxy/Tunnel do mình kiểm soát. Không đưa mật khẩu VPS, database hoặc secret vào repo. Thay mật khẩu VPS đã được chia sẻ qua chat sau khi hoàn tất cấu hình truy cập mới.
 
-```env
-DATABASE_URL="mysql://USER:PASSWORD@HOST:PORT/DATABASE"
-AUTH_SECRET="long-random-secret"
-AUTH_URL="https://your-project.vercel.app"
-NEXTAUTH_URL="https://your-project.vercel.app"
-NEXTAUTH_SECRET="same-as-auth-secret"
-```
+## Bản build Linux
 
-5. Deploy tren Vercel.
-6. Sau khi deploy lan dau, chay schema vao database production tu may local:
+Chạy `npm ci` và `npm run build` trong môi trường Linux tương thích với VPS. Prisma Client chứa mã native nên không sao chép `node_modules` hoặc bản build từ Windows lên Linux. Chép `.next/standalone`, `.next/static` và `public` theo cấu trúc Next.js standalone; khởi chạy bằng `node server.js` dưới tài khoản ứng dụng. Dùng `systemd` để tự khởi động lại và xem log.
 
-```bash
-$env:DATABASE_URL="mysql://USER:PASSWORD@HOST:PORT/DATABASE"
-npm run db:push
-npm run db:seed
-```
+Trước khi bật biểu mẫu/đăng nhập, kiểm tra kết nối `DATABASE_URL`, áp dụng schema sau khi đã sao lưu database (`npm run db:push` trong môi trường tin cậy), rồi tạo tài khoản quản trị với `SEED_ADMIN_EMAIL` và `SEED_ADMIN_PASSWORD` riêng (ít nhất 16 ký tự). Không chạy seed vào database hiện có nếu chưa xem dữ liệu mẫu mà script sẽ tạo.
 
-Neu dung macOS/Linux:
+## Kiểm tra sau triển khai
 
-```bash
-DATABASE_URL="mysql://USER:PASSWORD@HOST:PORT/DATABASE" npm run db:push
-DATABASE_URL="mysql://USER:PASSWORD@HOST:PORT/DATABASE" npm run db:seed
-```
+1. Kiểm tra HTTPS, trang chủ, logo và các trang đăng nhập/đăng ký trên desktop và điện thoại.
+2. Xác nhận header bảo mật và không có thông tin nhạy cảm trong log/trang lỗi.
+3. Thử biểu mẫu liên hệ, menu và đăng nhập khi database đã sẵn sàng.
+4. Cấu hình sao lưu database, giám sát tiến trình và cập nhật bảo mật định kỳ.
 
-## Them domain sau
-
-Sau khi mua domain:
-
-1. Vercel -> Project -> Settings -> Domains.
-2. Add domain, vi du `bepcochunho.vn`.
-3. Lam theo DNS records Vercel dua ra.
-4. Cap nhat env production:
-
-```env
-AUTH_URL="https://bepcochunho.vn"
-NEXTAUTH_URL="https://bepcochunho.vn"
-```
-
-5. Redeploy.
-
-## Luu y production
-
-- Khong commit `.env`.
-- Doi mat khau admin seed sau khi deploy.
-- Khong dung MySQL Docker local lam production database.
-- Nen bat backup tu nha cung cap MySQL cloud.
-- Rate limit hien la in-memory; khi traffic cao nen chuyen sang Redis/Upstash.
+Giới hạn tần suất đăng nhập hiện lưu trong bộ nhớ tiến trình. Nếu chạy nhiều instance, chuyển sang Redis hoặc kho lưu trữ chung để giới hạn có hiệu lực xuyên instance.

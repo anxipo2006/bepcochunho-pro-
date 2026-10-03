@@ -4,10 +4,11 @@ import { Role } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+import { getClientIp, rateLimit } from "@/lib/security";
 
 const credentialsSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
+  email: z.string().email().max(160),
+  password: z.string().min(8).max(128),
 });
 
 export const authConfig = {
@@ -31,8 +32,14 @@ export const authConfig = {
           return null;
         }
 
+        const email = parsed.data.email.toLowerCase();
+        const ip = await getClientIp();
+        const ipLimit = rateLimit(`login:ip:${ip}`, 30, 15 * 60 * 1000);
+        const emailLimit = rateLimit(`login:email:${email}`, 10, 15 * 60 * 1000);
+        if (!ipLimit.ok || !emailLimit.ok) return null;
+
         const user = await prisma.user.findUnique({
-          where: { email: parsed.data.email.toLowerCase() },
+          where: { email },
         });
 
         if (!user) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { ChefHat } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 export function AuthCard({
@@ -37,11 +37,8 @@ export function AuthCard({
         <div className="rounded-3xl border border-white/10 bg-white/[0.07] p-8 shadow-[0_32px_80px_rgba(0,0,0,0.5)] backdrop-blur-2xl">
           {/* Logo */}
           <Link href="/" className="mb-8 flex items-center gap-3">
-            <span className="relative grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-coral via-coral-medium to-coral-dark shadow-coral-glow">
-              <ChefHat size={22} className="text-white" />
-              <span className="absolute inset-0 rounded-2xl bg-white/10" />
-            </span>
-            <span className="text-lg font-bold text-white">Bếp Cô Chủ Nhỏ</span>
+            <Image src="/men-logo-mark.png" alt="" width={48} height={48} unoptimized className="rounded-xl object-contain" />
+            <span className="font-serif text-lg font-semibold text-white">Cơm Văn Phòng Mến</span>
           </Link>
 
           <h1 className="text-2xl font-extrabold text-white">{title}</h1>
@@ -55,4 +52,3 @@ export function AuthCard({
     </main>
   );
 }
-

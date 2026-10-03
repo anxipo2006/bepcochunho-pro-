@@ -30,8 +30,10 @@ const exportNames = {
 } as const;
 
 function parseDateInput(value: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
   const [year, month, day] = value.split("-").map(Number);
-  return new Date(Date.UTC(year, month - 1, day));
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return Number.isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== value ? null : date;
 }
 
 function toDateInput(date: Date) {
@@ -45,7 +47,8 @@ function defaultRange() {
   return { from: toDateInput(from), to: toDateInput(today) };
 }
 
-export async function GET(request: Request, { params }: { params: { type: keyof typeof exportNames } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ type: string }> }) {
+  const { type: rawType } = await params;
   const session = await auth();
 
   const user = session?.user
@@ -56,9 +59,10 @@ export async function GET(request: Request, { params }: { params: { type: keyof 
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
-  if (!exportNames[params.type]) {
+  if (!Object.hasOwn(exportNames, rawType)) {
     return new NextResponse("Not found", { status: 404 });
   }
+  const type = rawType as keyof typeof exportNames;
 
   const url = new URL(request.url);
   const defaults = defaultRange();
@@ -70,6 +74,9 @@ export async function GET(request: Request, { params }: { params: { type: keyof 
     : undefined;
   const fromDate = parseDateInput(fromInput);
   const toDate = parseDateInput(toInput);
+  if (!fromDate || !toDate || fromDate > toDate) {
+    return new NextResponse("Invalid date range", { status: 400 });
+  }
   const toExclusive = new Date(toDate);
   toExclusive.setUTCDate(toExclusive.getUTCDate() + 1);
 
@@ -85,9 +92,9 @@ export async function GET(request: Request, { params }: { params: { type: keyof 
     },
   });
 
-  const rows = makeRows(params.type, orders);
+  const rows = makeRows(type, orders);
   const csv = serializeCsv(rows);
-  const filename = `${exportNames[params.type]}-${fromInput}-${toInput}.csv`;
+  const filename = `${exportNames[type]}-${fromInput}-${toInput}.csv`;
 
   return new NextResponse(csv, {
     headers: {

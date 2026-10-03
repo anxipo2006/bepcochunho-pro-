@@ -18,23 +18,28 @@ const menuItems = [
 ];
 
 async function main() {
-  const adminPassword = await bcrypt.hash("admin123", 12);
+  const adminEmail = process.env.SEED_ADMIN_EMAIL?.trim().toLowerCase();
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD;
+  if (!adminEmail || !adminPassword || adminPassword.length < 16) {
+    throw new Error("Set SEED_ADMIN_EMAIL and a unique SEED_ADMIN_PASSWORD (at least 16 characters) before seeding.");
+  }
+  const passwordHash = await bcrypt.hash(adminPassword, 12);
 
   await prisma.user.upsert({
-    where: { email: "admin@cochunho.vn" },
+    where: { email: adminEmail },
     update: {
-      companyName: "Bếp Cô Chủ Nhỏ",
+      companyName: "Cơm Văn Phòng Mến",
       role: "ADMIN",
       isApproved: true,
     },
     create: {
-      companyName: "Bếp Cô Chủ Nhỏ",
-      email: "admin@cochunho.vn",
+      companyName: "Cơm Văn Phòng Mến",
+      email: adminEmail,
       phone: "0900000000",
       address: "TP.HCM",
       role: "ADMIN",
       isApproved: true,
-      password: adminPassword,
+      password: passwordHash,
     },
   });
 
@@ -154,7 +159,7 @@ async function main() {
     },
   });
 
-  console.log("Đã seed admin@cochunho.vn / admin123 và dữ liệu menu mẫu.");
+  console.log(`Đã seed tài khoản quản trị ${adminEmail} và dữ liệu menu mẫu.`);
 }
 
 main()

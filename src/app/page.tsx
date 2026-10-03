@@ -4,13 +4,14 @@ import { SiteHeader } from "@/components/site-header";
 import { WeeklyMenuView } from "@/components/weekly-menu-view";
 import { getActiveWeeklyMenu } from "@/lib/home-data";
 
-export default async function Home({ searchParams }: { searchParams: { consulted?: string } }) {
+export default async function Home({ searchParams }: { searchParams: Promise<{ consulted?: string }> }) {
+  const query = await searchParams;
   const weeklyMenu = await getActiveWeeklyMenu();
 
   return (
     <>
       <SiteHeader />
-      <MotionLanding consulted={searchParams.consulted} />
+      <MotionLanding consulted={query.consulted} />
       {weeklyMenu ? (
         <section id="menu-tuan" className="bg-white px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">

@@ -13,6 +13,9 @@ import {
   TrendingUp,
   Star,
   Users,
+  MessageCircle,
+  ClipboardCheck,
+  CookingPot,
 } from "lucide-react";
 import { createConsultationAction } from "@/actions/consultation";
 import { Badge } from "@/components/ui/badge";
@@ -34,8 +37,8 @@ const values = [
   },
   {
     icon: Bike,
-    title: "Giao hàng tận nơi, freeship 100%",
-    text: "Giao đúng giờ, đủ số lượng, giữ nóng trong thùng chuyên dụng đến tận cổng công ty hoặc khu vực nhận hàng.",
+    title: "Giao hàng tận nơi",
+    text: "Sắp xếp thời gian và điểm nhận hàng phù hợp với lịch làm việc của doanh nghiệp.",
     color: "bg-sky-50 text-sky-600 border-sky-200",
   },
   {
@@ -46,8 +49,8 @@ const values = [
   },
   {
     icon: ReceiptText,
-    title: "Hóa đơn VAT và công nợ",
-    text: "Pháp nhân Công ty TNHH minh bạch, hỗ trợ xuất hóa đơn VAT và chốt công nợ theo tuần hoặc theo tháng.",
+    title: "Báo giá và đối soát rõ ràng",
+    text: "Thống nhất thực đơn, số lượng và phương thức thanh toán trước khi bắt đầu phục vụ.",
     color: "bg-coral-soft text-coral-dark border-coral/20",
   },
 ];
@@ -86,31 +89,31 @@ const menuHighlights = [
 const steps = [
   {
     title: "Tư vấn và chọn khẩu phần",
-    text: "Tiếp nhận số lượng 50-200 phần, ngân sách từ 35.000đ và đặc thù ngành nghề để tư vấn thực đơn phù hợp.",
-    icon: "💬",
+    text: "Tiếp nhận số lượng, ngân sách và nhu cầu ăn uống để tư vấn thực đơn phù hợp.",
+    icon: MessageCircle,
   },
   {
     title: "Gửi menu trải nghiệm và ký hợp đồng",
     text: "Hỗ trợ suất ăn mẫu, thống nhất menu tuần/tháng, chính sách giao hàng và điều khoản thanh toán.",
-    icon: "📋",
+    icon: ClipboardCheck,
   },
   {
     title: "Cấp tài khoản và phục vụ hằng ngày",
-    text: "HR/Admin chốt số lượng trên hệ thống trước 15h00 hôm trước. Bếp tiến hành nấu và giao nóng đúng giờ.",
-    icon: "🍱",
+    text: "Doanh nghiệp chốt số lượng theo lịch đã thống nhất. Bếp chuẩn bị và giao bữa trưa đến điểm nhận.",
+    icon: CookingPot,
   },
   {
     title: "Đối soát và chốt công nợ",
-    text: "Hệ thống xuất bảng kê chi tiết. Khách hàng kiểm tra, Bếp xuất hóa đơn VAT và thanh toán công nợ nhanh gọn.",
-    icon: "✅",
+    text: "Hai bên kiểm tra bảng kê đơn hàng và chốt thanh toán theo thỏa thuận.",
+    icon: ReceiptText,
   },
 ];
 
 const stats = [
-  { value: "3+", label: "Năm kinh nghiệm", icon: TrendingUp },
-  { value: "50+", label: "Doanh nghiệp tin dùng", icon: Users },
-  { value: "35K", label: "Đồng mỗi phần", icon: Star },
-  { value: "200", label: "Phần tối đa/ngày", icon: Utensils },
+  { value: "Đổi vị", label: "Thực đơn theo tuần", icon: TrendingUp },
+  { value: "Đủ món", label: "Mặn, chay và món nước", icon: Users },
+  { value: "Tận nơi", label: "Giao đến văn phòng", icon: Star },
+  { value: "Rõ ràng", label: "Đặt món và đối soát", icon: Utensils },
 ];
 
 export function MotionLanding({ consulted }: { consulted?: string }) {
@@ -148,7 +151,7 @@ export function MotionLanding({ consulted }: { consulted?: string }) {
             <h2 className="mt-5 text-3xl font-extrabold leading-tight text-slate-950 sm:text-4xl">
               Về{" "}
               <span className="bg-gradient-to-r from-coral to-coral-dark bg-clip-text text-transparent">
-                Bếp Cô Chủ Nhỏ
+                Cơm Văn Phòng Mến
               </span>
               {" "}— nơi khởi nguồn năng lượng cho ngày dài
             </h2>
@@ -162,7 +165,7 @@ export function MotionLanding({ consulted }: { consulted?: string }) {
               năng lượng và nâng cao hiệu suất làm việc của cán bộ nhân viên.
             </p>
             <p className="leading-8 text-slate-700">
-              Công ty TNHH Bếp Cô Chủ Nhỏ là đối tác cung cấp suất ăn cho xí nghiệp, nhà máy và khối văn phòng tại
+              Cơm Văn Phòng Mến phục vụ những bữa trưa chỉn chu cho xí nghiệp, nhà máy và khối văn phòng tại
               TP.HCM. Không chỉ bán một suất cơm, chúng tôi gửi vào đó sự chăm chút từ khâu chọn nguyên liệu đến khi
               trao tận tay khách hàng.
             </p>
@@ -183,7 +186,7 @@ export function MotionLanding({ consulted }: { consulted?: string }) {
               Năng lực phục vụ và giá trị cốt lõi
             </h2>
             <p className="mx-auto mt-3 max-w-2xl text-slate-500">
-              5 cam kết làm nên sự khác biệt của Bếp Cô Chủ Nhỏ với các nhà cung cấp khác.
+              Mến chăm chút từ khâu chọn món đến lúc bữa trưa được giao tận tay.
             </p>
           </div>
           <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-5">
@@ -215,8 +218,8 @@ export function MotionLanding({ consulted }: { consulted?: string }) {
               Bữa trưa phong phú, dễ ăn, dễ triển khai
             </h2>
           </div>
-          <ButtonLink href="#menu-tuan" variant="secondary">
-            Xem menu tuần →
+          <ButtonLink href="#lien-he" variant="secondary">
+            Nhận menu tuần →
           </ButtonLink>
         </div>
         <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -261,18 +264,19 @@ export function MotionLanding({ consulted }: { consulted?: string }) {
               className="absolute hidden h-0.5 bg-gradient-to-r from-coral/20 via-coral/60 to-coral/20 md:block"
               style={{ top: "2.5rem", left: "calc(12.5% + 1.5rem)", right: "calc(12.5% + 1.5rem)" }}
             />
-            {steps.map((step, index) => (
-              <div key={step.title} className="group relative flex flex-col items-center px-4 pb-8 text-center md:pb-0">
+            {steps.map((step, index) => {
+              const StepIcon = step.icon;
+              return <div key={step.title} className="group relative flex flex-col items-center px-4 pb-8 text-center md:pb-0">
                 <div className="relative z-10 mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-coral to-coral-dark text-2xl shadow-lg shadow-coral/30 transition-all duration-300 group-hover:scale-110 group-hover:shadow-coral-glow">
-                  {step.icon}
+                  <StepIcon size={24} className="text-white" />
                   <span className="absolute -right-1 -top-1 grid h-5 w-5 place-items-center rounded-full bg-slate-950 text-[10px] font-black text-white">
                     {index + 1}
                   </span>
                 </div>
                 <h3 className="font-bold text-slate-950">{step.title}</h3>
                 <p className="mt-2 text-sm leading-6 text-slate-500">{step.text}</p>
-              </div>
-            ))}
+              </div>;
+            })}
           </div>
         </div>
       </section>
@@ -297,16 +301,16 @@ export function MotionLanding({ consulted }: { consulted?: string }) {
               Đừng để nhân viên phải lo lắng bữa trưa.
             </h2>
             <p className="mt-3 max-w-2xl leading-7 text-slate-300">
-              Hãy để Bếp Cô Chủ Nhỏ lo. Liên hệ Zalo/Hotline để nhận báo giá chi tiết và thực đơn tuần mới nhất.
+              Hãy để Cơm Văn Phòng Mến lo bữa trưa. Liên hệ để nhận báo giá và thực đơn tuần mới nhất.
             </p>
             <div className="mt-8 grid gap-3 text-sm text-slate-300">
               {(
                 [
                   [MapPin, "14/9/5 Lê Thúc Hoạch, Phường Phú Thọ Hòa, Quận Tân Phú, TP.HCM"],
                   [Phone, "Hotline/Zalo: 0337 998 639"],
-                  [Building2, "Công ty TNHH Bếp Cô Chủ Nhỏ"],
+                  [Building2, "Cơm Văn Phòng Mến · Bữa trưa trao điều lành"],
                   [Clock3, "Tiếp nhận đơn: 08:00 - 18:00, từ Thứ 2 đến Thứ 7"],
-                  [ShieldCheck, "Pháp nhân rõ ràng, hỗ trợ hợp đồng, VAT và công nợ."],
+                  [ShieldCheck, "Tư vấn thực đơn, báo giá và đối soát theo thỏa thuận."],
                 ] as [React.ElementType, string][]
               ).map(([IconComp, text], i) => (
                 <div key={i} className="flex gap-3">
@@ -327,7 +331,7 @@ export function MotionLanding({ consulted }: { consulted?: string }) {
             >
               <div className="mb-1">
                 <p className="text-lg font-bold">Nhận báo giá miễn phí</p>
-                <p className="text-sm text-white/50">Điền thông tin, Bếp phản hồi trong 2 giờ</p>
+                <p className="text-sm text-white/50">Để lại thông tin để Bếp liên hệ tư vấn</p>
               </div>
               {consulted === "1" ? (
                 <div className="rounded-xl border border-teal-400/30 bg-teal-500/15 px-4 py-3 text-sm font-medium text-teal-200">

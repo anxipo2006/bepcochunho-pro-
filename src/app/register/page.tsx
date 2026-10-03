@@ -6,13 +6,14 @@ import { Field, inputClassDark } from "@/components/ui/form";
 
 const errorMessage = {
   exists: "Email này đã tồn tại. Vui lòng dùng email khác hoặc đăng nhập.",
-  invalid: "Thông tin chưa hợp lệ. Mật khẩu cần tối thiểu 8 ký tự, số điện thoại 8-20 chữ số/ký tự hợp lệ.",
+  invalid: "Thông tin chưa hợp lệ. Mật khẩu cần tối thiểu 12 ký tự, số điện thoại 8-20 chữ số/ký tự hợp lệ.",
   "rate-limit": "Bạn gửi đăng ký quá nhanh. Vui lòng thử lại sau.",
 } as const;
 
-export default function RegisterPage({ searchParams }: { searchParams: { error?: string } }) {
-  const message = searchParams.error
-    ? errorMessage[searchParams.error as keyof typeof errorMessage] ?? errorMessage.invalid
+export default async function RegisterPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
+  const query = await searchParams;
+  const message = query.error
+    ? errorMessage[query.error as keyof typeof errorMessage] ?? errorMessage.invalid
     : null;
 
   return (
@@ -54,8 +55,9 @@ export default function RegisterPage({ searchParams }: { searchParams: { error?:
             className={inputClassDark}
             name="password"
             type="password"
-            minLength={8}
-            autoComplete="off"
+            minLength={12}
+            maxLength={128}
+            autoComplete="new-password"
             required
           />
         </Field>

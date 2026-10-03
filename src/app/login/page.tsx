@@ -4,11 +4,12 @@ import { AuthCard } from "@/components/auth-card";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { Field, inputClassDark } from "@/components/ui/form";
 
-export default function LoginPage({
+export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: { error?: string; registered?: string };
+  searchParams: Promise<{ error?: string; registered?: string }>;
 }) {
+  const query = await searchParams;
   return (
     <AuthCard
       title="Đăng nhập"
@@ -22,12 +23,12 @@ export default function LoginPage({
         </>
       }
     >
-      {searchParams.registered ? (
+      {query.registered ? (
         <div className="mb-5 rounded-xl border border-teal-400/30 bg-teal-500/15 px-4 py-3 text-sm font-medium text-teal-200">
           ✓ Đăng ký thành công. Bếp sẽ liên hệ xác minh và duyệt tài khoản sau khi chốt hợp đồng.
         </div>
       ) : null}
-      {searchParams.error ? (
+      {query.error ? (
         <div className="mb-5 rounded-xl border border-red-400/30 bg-red-500/15 px-4 py-3 text-sm font-medium text-red-200">
           ✗ Email hoặc mật khẩu không đúng. Vui lòng kiểm tra lại.
         </div>
@@ -41,8 +42,9 @@ export default function LoginPage({
             className={inputClassDark}
             name="password"
             type="password"
-            minLength={6}
-            autoComplete="off"
+            minLength={8}
+            maxLength={128}
+            autoComplete="current-password"
             required
           />
         </Field>
